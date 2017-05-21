@@ -51,15 +51,16 @@ add_library( # Sets the name of the library.
 # completing its build.
 
 
-set(distribution_DIR /root/AndroidStudioProjects/MoneroTest/distribution)
+
+set(distribution_DIR ${CMAKE_SOURCE_DIR}/../distribution)
 
 ############
 # OPENSSL
 ############
 
-add_library(openssl_crypto STATIC IMPORTED)
-set_target_properties(openssl_crypto PROPERTIES IMPORTED_LOCATION
-    ${distribution_DIR}/OpenSSL/lib/${ANDROID_ABI}/libopenssl_crypto.so)
+add_library(crypto STATIC IMPORTED)
+set_target_properties(crypto PROPERTIES IMPORTED_LOCATION
+    ${distribution_DIR}/OpenSSL/lib/${ANDROID_ABI}/libcrypto.so)
 
 add_library(ssl STATIC IMPORTED)
 set_target_properties(ssl PROPERTIES IMPORTED_LOCATION
@@ -118,9 +119,9 @@ set_target_properties(boost_wserialization PROPERTIES IMPORTED_LOCATION
 
 
 
-add_library(crypto SHARED IMPORTED)
-set_target_properties(crypto PROPERTIES IMPORTED_LOCATION
-    ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libcrypto.so)
+add_library(cncrypto SHARED IMPORTED)
+set_target_properties(cncrypto PROPERTIES IMPORTED_LOCATION
+    ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libcncrypto.so)
 
 add_library(cryptonote_core SHARED IMPORTED)
 set_target_properties(cryptonote_core PROPERTIES IMPORTED_LOCATION
@@ -231,6 +232,8 @@ message(STATUS distribution_DIR :  ${distribution_DIR})
 target_link_libraries( # Specifies the target library.
                        native-lib
                         android
+			crypto
+                        ssl
                         boost_chrono
                         boost_date_time
                         boost_filesystem
@@ -240,7 +243,7 @@ target_link_libraries( # Specifies the target library.
                         boost_system
                         boost_thread
                         boost_wserialization
-                        crypto
+                        cncrypto
                         wallet
                         blockchain_db
                         cryptonote_core
@@ -250,7 +253,6 @@ target_link_libraries( # Specifies the target library.
                         blocks
                         lmdb
                         ringct
-                        openssl_crypto
                         common
                         mnemonics
                         epee
@@ -258,7 +260,6 @@ target_link_libraries( # Specifies the target library.
                         unbound
                         miniupnpc
 
-                        ssl
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
