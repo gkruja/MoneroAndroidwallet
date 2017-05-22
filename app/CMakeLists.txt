@@ -6,13 +6,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 
-set(MONERO_DIR "/home/gkruja/Desktop/monero")
 
-message(STATUS MOENRO_DIR " : ${MONERO_DIR}")
-
-set(MONERO_BUILD_DIR ${MONERO_DIR}/build/${ANDROID_ABI})
-
-message(STATUS MONERO_BUILD_DIR " : ${MONERO_BUILD_DIR}")
 
 message(STATUS ABI_INFO  = ${ANDROID_ABI})
 
@@ -232,7 +226,7 @@ message(STATUS distribution_DIR :  ${distribution_DIR})
 target_link_libraries( # Specifies the target library.
                        native-lib
                         android
-			crypto
+			            crypto
                         ssl
                         boost_chrono
                         boost_date_time

@@ -15,7 +15,7 @@ android {
                 cppFlags "-std=c++11"
                 cppFlags "-fexceptions", "-frtti"
 
-              //  arguments "-DANDROID_STL=gnustl_static"
+                arguments '-DANDROID_STL=c++_shared', '-DANDROID_TOOLCHAIN=gcc'
             }
         }
         ndk {
