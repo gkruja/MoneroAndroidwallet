@@ -8,16 +8,23 @@
 #include "blockchain_db/lmdb/db_lmdb.h"
 
 #include "common/base58.h"
+#include "serialization/binary_utils.h"
+#include "string_coding.h"
 
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+#include "wallet/wallet2.h"
 
 #include "wallet/wallet2.h"
 
-#include "crypto/crypto.h"
-#include "crypto/hash.h"
-#include "crypto/random.h"
-#include "mnemonics/english.h"
+
+
+#include "mnemonics/electrum-words.h"
 
 std::vector<uint8_t > HexToBytes(const std::string& hex) ;
+
+secret_key * get_key_from_hash(crypto::hash& in_hash);
 
 extern "C"
 {
@@ -28,12 +35,17 @@ extern "C"
 }
 
 
+
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
 
+    string language {"English"};
+
+    std::string hello = "\n";
 
     size_t size =32;
     uint8_t *bytes = new uint8_t(size);
@@ -41,138 +53,160 @@ Java_com_example_root_monerotest_MainActivity_stringFromJNI(
 
     char testString[65];
 
-    secret_key rk;
+    secret_key hexseed;
 
     for(int i = 0; i < 32; i++)
     {
-        rk.data[i] = bytes[i];
+        hexseed.data[i] = bytes[i];
         sprintf(&testString[i*2], "%02x", (unsigned int)bytes[i]);
     }
 
 
+    crypto::public_key public_spend_key;
+    crypto::secret_key private_spend_key;
 
+    char PubSK[65];
+    char PrivSK[65];
 
-
-
-    secret_key Private_Spend_key;
-    public_key Public_Spend_key;
-
-    secret_key private_viewkey;
-    public_key public_viewkey;
-
-    char private_spend_string[65];
-    char public_spend_string[65];
-    char private_view_string[65];
-    char public_view_string[65];
-    char resultS[131];
-
-    secret_key test = generate_keys(Public_Spend_key,Private_Spend_key,rk);
-    crypto::rand(size,bytes);
-
-//    for(int i = 0; i < 32; i++) {
-//        public_viewkey.data[i] = bytes[i];
-//    }
-
-     test = generate_keys(public_viewkey,private_viewkey,rk);
-
-
-
-
+    crypto::generate_keys(public_spend_key, private_spend_key,hexseed, true);
 
     for(int i = 0; i < 32; i++)
     {
-
-        sprintf(&private_spend_string[i*2], "%02x", (unsigned int)Private_Spend_key.data[i]);
-        sprintf(&public_spend_string[i*2], "%02x", (unsigned int)Public_Spend_key.data[i]);
-        sprintf(&private_view_string[i*2], "%02x", (unsigned int)private_viewkey.data[i]);
-        sprintf(&public_view_string[i*2], "%02x", (unsigned int)public_viewkey.data[i]);
+        sprintf(&PubSK[i*2], "%02x", (unsigned int)public_spend_key.data[i]);
+        sprintf(&PrivSK[i*2], "%02x", (unsigned int)private_spend_key.data[i]);
 
     }
 
-    strcat(&resultS[0],"12");
-    strcat(&resultS[0], public_spend_string);
-    strcat(&resultS[0], public_view_string);
 
-    std::string hello = "\n           Private Spend Key \n\n";
+    crypto::secret_key hash_of_hash;
 
+    cn_fast_hash(private_spend_key.data, sizeof(private_spend_key.data), hash_of_hash.data);
 
-    string temp = private_spend_string;
-    hello += temp;
-    hello += "\n\n           Public Spend Key \n\n";
-    temp = public_spend_string;
-    hello += temp;
-    hello +="\n\n           Private view key\n\n";
-    hello += private_view_string;
-    hello += "\n\n           Public view key\n\n";
-    hello += public_view_string;
+    crypto::public_key public_view_key;
+    crypto::secret_key private_view_key;
 
-    uint8_t *md = new uint8_t(32);
+    char PubVK[65];
+    char PrivVK[65];
 
+    crypto::generate_keys(public_view_key, private_view_key,hash_of_hash, true);
 
-    uint8_t * addres_pull = new uint8_t[69];
-    uint8_t *final = new uint8_t(65);
+    for(int i = 0; i < 32; i++)
+    {
+        sprintf(&PubVK[i*2], "%02x", (unsigned int)public_view_key.data[i]);
+        sprintf(&PrivVK[i*2], "%02x", (unsigned int)private_view_key.data[i]);
+
+    }
 
 
+    // having all keys, we can get the corresponding monero address
+    cryptonote::account_public_address address {public_spend_key, public_view_key};
 
-    // step 1 of wallet generation
+    string addr = cryptonote::get_account_address_as_str(true,address);
+
+
+    string mnemonic_str ;
+
+    bool r =crypto::ElectrumWords::bytes_to_words(private_spend_key,mnemonic_str,language);
 
 
 
 
+    // simplewallet wallet file name, e.g., mmwallet.bin
+    // actually we do not directy create this file. we
+    // create a file *.keys containing the address and the private keys
+    string wallet_file = "Test";
+
+    string password= "password";
+    // name of the keys files
+    string keys_file_name = wallet_file + string(".keys");
+
+    cryptonote::account_keys accountKeys = cryptonote::account_keys();
+
+    accountKeys.m_account_address = address;
+    accountKeys.m_spend_secret_key = private_spend_key;
+    accountKeys.m_view_secret_key = private_view_key;
+
+    std::string account_data;
+
+
+   bool a = epee::serialization::store_t_to_binary(accountKeys,account_data);
+
+
+    rapidjson::Document json;
+    json.SetObject();
+    rapidjson::Value value(rapidjson::kStringType);
+    rapidjson::Value keyData(rapidjson::kStringType);
+
+    keyData.SetString("key_data",8);
+
+    value.SetString(account_data.c_str(), account_data.length());
+
+
+
+
+
+
+    json.AddMember(keyData,value,json.GetAllocator());
+
+
+    tools::wallet2::keys_file_data keys_file_data ;
+    keys_file_data = boost::value_initialized<tools::wallet2::keys_file_data>();
+
+
+    // Serialize the JSON object
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    json.Accept(writer);
+    account_data = buffer.GetString();
+
+    crypto::chacha8_key key;
+    crypto::generate_chacha8_key(password, key);
+    std::string cipher;
+    cipher.resize(account_data.size());
+    keys_file_data.iv = crypto::rand<crypto::chacha8_iv>();
+    crypto::chacha8(account_data.data(), account_data.size(),
+                    key, keys_file_data.iv, &cipher[0]);
+    keys_file_data.account_data = cipher;
+
+    std::string buf;
+
+    // serialize key file data
+    if (!serialization::dump_binary(keys_file_data, buf))
+    {
+        cerr << "Something went wrong with serializing keys_file_data" << endl;
+    }
+
+    // save serialized keys into the wallet file
+    if (!epee::file_io_utils::save_string_to_file("/sdcard/monero/"+keys_file_name, buf))
+    {
+        cerr << "Something went wrong with writing file: " << keys_file_name << endl;
+    }
+
+
+//    FILE* file = fopen("/sdcard/hello.txt","w+");
 //
-//    final[0] = 18;
-//    for(int i = 0; i < 32; i++) {
-//
-//        final[i+1] = Public_Spend_key.data[i];
-//        final[i+32] = public_viewkey.data[i];
-//
+//    if (file != NULL)
+//    {
+//        fputs("HELLO WORLD! Monero Bitches\n", file);
+//        fflush(file);
+//        fclose(file);
 //    }
 
+    hello+="\n Private Spend Key \n\n";
+    hello += PrivSK;
+
+    hello+="\n Public Spend Key\n\n";
+    hello += PubSK;
+    hello+="\n Private View Key\n\n";
+    hello += PrivVK;
+    hello+="\n Public view Key\n\n";
+    hello += PubVK;
+
+    hello+="\n\n Address\n\n" +addr;
+
+    hello+="\n\n"+mnemonic_str;
 
 
-     string hex  = resultS;
-    vector<uint8_t> out = HexToBytes( hex);
-
-
-    for (int i = 0; i < out.size(); ++i) {
-        final[i] = out[i];
-        addres_pull[i] = out[i];
-    }
-
-
-        char nb[2];
-    char keyAckeck[65];
-    char keyBcheck[65];
-    sprintf(&nb[0 * 2], "%02x", (unsigned int) final[0]);
-
-    for(int i = 1; i < 33; i++) {
-        sprintf(&keyAckeck[(i-1) * 2], "%02x", (unsigned int) final[i]);
-        sprintf(&keyBcheck[(i-1) * 2], "%02x", (unsigned int) final[i+31]);
-
-    }
-
-
-    // step 2 keccak-256 keys
-
-    keccak(final,65,md,32);
-
-
-    addres_pull[65] =md[0];
-    addres_pull[66] =md[1];
-    addres_pull[67] =md[2];
-    addres_pull[68] =md[3];\
-
-
-    char tempMd[8];
-    for(int i = 0; i < 4; i++) {
-
-        sprintf(&tempMd[i * 2], "%02x", (unsigned int) md[i]);
-    }
-
-    //strcat(hex,tempMd);
-    hex += tempMd;
-
-    string address = tools::base58::encode_addr(95,hex);
 
     return env->NewStringUTF(hello.c_str());
 
@@ -190,4 +224,11 @@ std::vector<uint8_t > HexToBytes(const std::string& hex) {
     }
 
     return bytes;
+}
+
+secret_key* get_key_from_hash(crypto::hash& in_hash)
+{
+    crypto::secret_key* key;
+    key = reinterpret_cast<secret_key*>(&in_hash);
+    return key;
 }
