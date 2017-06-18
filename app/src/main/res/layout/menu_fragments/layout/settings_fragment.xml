@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="462dp"
+        android:text="THIS WILL BE OUR SETTINGS!"
+        android:textAlignment="center"
+        android:textSize="30sp"/>
 </LinearLayout>

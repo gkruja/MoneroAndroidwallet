@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">MoneroTest</string>
+    <string name="app_name">Monero Wallet</string>
+
+    <string-array name="menu_titles">
+        <item>Dashboard</item>
+        <item>Send</item>
+        <item>Sign</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="mixInValues">
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+    </string-array>
 </resources>
