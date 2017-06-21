@@ -59,6 +59,10 @@ namespace epee
 
       if(pri->m_response_code != 200)
       {
+
+      //     uri.to_string();
+
+       // LOG_PRINT_L1("Printing Comment " << pri->m_response_comment << " Body " << pri->m_body << "extra info " << pri->m_mime_tipe <<"\n"<< pri->m_header_info.m_connection <<"\n"<< pri->m_header_info.m_host<<"\n response code" << to_string(pri->m_response_code << uri.to_string()) ) ;
         LOG_PRINT_L1("Failed to invoke http request to  " << uri << ", wrong response code: " << pri->m_response_code);
         return false;
       }

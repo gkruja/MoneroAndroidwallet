@@ -24,14 +24,9 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
-
-
-
-
-
-
-
+             src/main/cpp/Monero.cpp
+              src/main/cpp/Monero.h
+              src/main/cpp/native-lib.cpp)
 
 
 
@@ -121,9 +116,9 @@ add_library(cryptonote_core SHARED IMPORTED)
 set_target_properties(cryptonote_core PROPERTIES IMPORTED_LOCATION
     ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libcryptonote_core.so)
 
-add_library(wallet STATIC IMPORTED)
+add_library(wallet SHARED IMPORTED)
 set_target_properties(wallet PROPERTIES IMPORTED_LOCATION
-    ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libwallet_merged.a)
+    ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libwallet.so)
 
 add_library(blockchain_db SHARED IMPORTED)
 set_target_properties(blockchain_db PROPERTIES IMPORTED_LOCATION
@@ -176,15 +171,9 @@ set_target_properties(unbound PROPERTIES IMPORTED_LOCATION
     ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libunbound.so)
 
 
-
 add_library(miniupnpc STATIC IMPORTED)
 set_target_properties(miniupnpc PROPERTIES IMPORTED_LOCATION
     ${distribution_DIR}/Monero/lib/${ANDROID_ABI}/libminiupnpc.a)
-
-
-
-
-
 
 
 
@@ -208,6 +197,7 @@ include_directories(        ${distribution_DIR}/Monero/include/src
 
 target_include_directories(native-lib
                             PUBLIC
+                            ${distribution_DIR}/Curllib
 		                    ${distribution_DIR}/Monero/include/src
 		                    ${distribution_DIR}/Monero/include/external
 		                    ${distribution_DIR}/Monero/include/external/easylogging++

@@ -15,4 +15,10 @@
         <item>12</item>
         <item>16</item>
     </string-array>
+
+    <string name="nav_item_dashboard_title">Dashboard</string>
+    <string name="nav_item_send_title">Send</string>
+    <string name="nav_item_sign_title">Sign</string>
+    <string name="nav_item_settings_title">Settings</string>
+
 </resources>

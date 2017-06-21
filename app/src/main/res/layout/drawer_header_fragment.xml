@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white"
+                                             android:layout_width="240dp"
+    android:layout_margin="4dp"
+                                             android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/monero_logo"
+        android:src="@drawable/xmr_logo_256"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"/>
+
+
+    <TextView
+        android:id="@+id/monero_title"
+        android:text="Monero"
+        android:textAllCaps="true"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="32sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/monero_logo"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/monero_logo"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/monero_logo"
+        android:layout_marginLeft="16dp" />
+</android.support.constraint.ConstraintLayout>

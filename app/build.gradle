@@ -21,7 +21,7 @@ android {
         ndk {
             // Specifies the ABI configurations of your native
             // libraries Gradle should build and package with your APK.
-            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a','x86'
         }
 
     }
@@ -37,12 +37,13 @@ android {
             jniLibs.srcDirs = ['../distribution/Monero/lib', '../distribution/Boost/lib', '../distribution/OpenSSL/lib', "libs"]
             jniLibs.includes = ['../distribution/OpenSSL/include']
 
-            res.srcDirs =
-                    [
-                            'src/main/res/layout/menu_fragments',
-                            'src/main/res/layout',
-                            'src/main/res'
-                    ]
+//            res.srcDirs =
+//                    [
+//                            'src/main/res/drawable',
+//                            'src/main/res/layout/menu_fragments',
+//                            'src/main/res/layout',
+//                            'src/main/res'
+//                            ]
         }
     }
     externalNativeBuild {
@@ -61,7 +62,7 @@ dependencies {
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.ikimuhendis:ldrawer:0.1'
-    compile 'com.android.support:design:26.0.0-alpha1'
+    compile 'com.android.support:design:25.3.1'
 }

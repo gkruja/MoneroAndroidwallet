@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:id="@+id/group_0"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_dashboard"
+            android:checked="false"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/nav_item_dashboard_title" />
+    </group>
+
     <group android:id="@+id/group_1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/first1"
+            android:id="@+id/item_send"
             android:checked="false"
-            android:icon="@drawable/ic_menu_black_24dp"
-            android:title="Title 1" />
+            android:icon="@drawable/ic_send_black_24dp"
+            android:title="@string/nav_item_send_title" />
     </group>
 
     <group android:id="@+id/group_2"
            android:checkableBehavior="single">
         <item
-            android:id="@+id/second2"
+            android:id="@+id/item_sign"
             android:checked="false"
-            android:icon="@drawable/ic_menu_black_24dp"
-            android:title="Title 2" />
+            android:icon="@drawable/ic_edit_black_24dp"
+            android:title="@string/nav_item_sign_title" />
+    </group>
+
+    <group android:id="@+id/group_3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_settings"
+            android:checked="false"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/nav_item_settings_title" />
     </group>
 </menu>

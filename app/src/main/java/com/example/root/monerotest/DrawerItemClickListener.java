@@ -56,7 +56,7 @@ class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickL
 
         if(fragment != null){
             ((MainActivity) mContext).getFragmentManager().beginTransaction().
-                        replace(R.id.content_frame, fragment).commit();
+                        replace(R.id.main_content, fragment).commit();
 
             mDrawerList.setItemChecked(position, true);
             mDrawerLayout.closeDrawer(mDrawerList);
