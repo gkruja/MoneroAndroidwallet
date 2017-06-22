@@ -65,8 +65,12 @@ public class DashboardFragment extends Fragment {
                 final List<Spanned> list = new ArrayList<Spanned>(Arrays.asList(color_transfers));
                 final ArrayAdapter<Spanned> arrayAdapter = new ArrayAdapter<Spanned>(getActivity(),android.R.layout.simple_list_item_1,list);
 
-                Histroy.setAdapter(arrayAdapter);
+                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
+                                            R.layout.item_history, "jSOnStringData");
 
+
+                //Histroy.setAdapter(arrayAdapter);
+                Histroy.setAdapter(adapter);
             }
         }
     }

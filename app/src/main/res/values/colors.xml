@@ -7,6 +7,7 @@
 
     <color name="main_background">#f2eeef</color>
 
+    <color name="gray_title_color">#817e77</color>
 
     <color name="menu_font_color">#fffdf1</color>
     <color name="menu_background_color">#1c1c1c</color>
