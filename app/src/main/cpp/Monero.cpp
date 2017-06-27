@@ -14,6 +14,7 @@ using namespace cryptonote;
             remove("/sdcard/monerolog");
             mlog_configure("/sdcard/monerolog", false);
             mlog_set_log_level(loglevel);
+
         }
 
         if (wallet2 != nullptr)
