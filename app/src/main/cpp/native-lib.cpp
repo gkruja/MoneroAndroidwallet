@@ -11,9 +11,20 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_MainActivity_InitWallet(
         JNIEnv *env,
-        jobject /* this */)
+        jobject /* this */,jstring Path)
 {
-    bool init = wallet2.init( "http://192.168.1.141:28081", "password", "example", true, 4);
+    bool init =false ;
+    string path = env->GetStringUTFChars(Path,0);
+
+   if (std::ifstream(path+"/monero/example.keys")) {
+
+        init = wallet2.init("159.203.250.205:38081", "password", path+"/monero/example", true, 4);
+   } else
+   {
+       wallet2.GenerateWallet(path,"example","password");
+
+      init =   wallet2.init("159.203.250.205:38081", "password", path+"/moenro/example", true, 4);
+   }
 
     return init;
 }
@@ -30,7 +41,7 @@ Java_com_example_root_monerotest_DashboardFragment_CheckConnection(
 
 
 extern "C"
-JNIEXPORT jobjectArray JNICALL
+JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_DashboardFragment_Transfers(
         JNIEnv *env,
         jobject /* this */)
@@ -40,7 +51,7 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
 
 
     int count =0 ;
-    string temp;
+    string temp = "[";
     jstring str;
     jobjectArray payment;
     jsize len = transfer.size();
@@ -56,12 +67,10 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
         string address = i->second.second;
         uint64_t height =  i->first;
 
-        if(in_out) {
-            temp ="<html><font color=\'green\'>IN</font></html> "  + address;
-        } else{
 
-            temp = "<html><font color=\'red\'>OUT</font></html> "    +address;
-        }
+
+        temp += address +",";
+
         str = env->NewStringUTF(temp.c_str());
 
         env->SetObjectArrayElement(payment,count,str);
@@ -72,7 +81,9 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
     }
 
 
-    return payment;
+    int i = temp.find_last_of(",");
+    temp = temp.substr(0,i)+"]";
+    return env->NewStringUTF(temp.c_str());
 }
 extern "C"
 JNIEXPORT jdouble JNICALL

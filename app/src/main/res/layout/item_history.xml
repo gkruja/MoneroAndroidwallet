@@ -51,7 +51,7 @@
         android:id="@+id/fee_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0.00034"
+        android:text="0.00000"
         android:textStyle="italic"
         android:textSize="14sp"
         android:textColor="@android:color/holo_red_light"

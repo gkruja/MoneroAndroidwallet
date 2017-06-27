@@ -2,6 +2,7 @@ package com.example.root.monerotest;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity  {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
-        boolean connected = InitWallet();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
@@ -84,7 +85,10 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        String extStore = System.getenv("EXTERNAL_STORAGE");
 
+
+        boolean connected = InitWallet(extStore);
 
     }
 
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity  {
      */
 
 
-    public native boolean InitWallet();
+    public native boolean InitWallet(String path);
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

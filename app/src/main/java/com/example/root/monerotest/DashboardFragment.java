@@ -53,20 +53,16 @@ public class DashboardFragment extends Fragment {
             else {
                 Balance.setText(String.format("%.3f",Balance())+"\tXMR");
                 unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
-                String[] transfers = Transfers();
-                Spanned[] color_transfers = new Spannable[transfers.length];
+                String transfers = Transfers();
 
-                for(int i =0 ;i<transfers.length;i++)
-                {
-                   color_transfers[i] =  Html.fromHtml(transfers[i]);
-                }
+
+
                 ListView Histroy = (ListView) view.findViewById(R.id.listView1);
 
-                final List<Spanned> list = new ArrayList<Spanned>(Arrays.asList(color_transfers));
-                final ArrayAdapter<Spanned> arrayAdapter = new ArrayAdapter<Spanned>(getActivity(),android.R.layout.simple_list_item_1,list);
+
 
                 TransactionAdapter adapter = new TransactionAdapter(getActivity(),
-                                            R.layout.item_history, "jSOnStringData");
+                                            R.layout.item_history, transfers);
 
 
                 //Histroy.setAdapter(arrayAdapter);
@@ -91,5 +87,5 @@ public class DashboardFragment extends Fragment {
     public native boolean CheckConnection();
     public native double Balance();
     public native double UnlockedBalance();
-    public native String[] Transfers();
+    public native String Transfers();
 }

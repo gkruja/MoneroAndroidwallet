@@ -22,12 +22,12 @@ using namespace cryptonote;
         daemon.clear();
         boost::program_options::options_description *desc_params;
         // public testnet 159.203.250.205:38081
-        daemon.append("192.168.1.141:28081");
+       // daemon.append(DaemonAddress);
 
         wallet2 = new tools::wallet2(true);
 
-        wallet2->load("/sdcard/monero/example", "password");
-        bool init = wallet2->init(std::move(daemon));
+        wallet2->load( WalletName, "password");
+        bool init = wallet2->init(std::move(DaemonAddress));
 
         wallet2->refresh();
 
@@ -48,15 +48,15 @@ using namespace cryptonote;
     }
 
 
-    bool AndroidWallet::GenerateWallet(string Name,string Password) {
+    bool AndroidWallet::GenerateWallet(string path,string Name,string Password) {
 
-        boost::filesystem::path dir("/sdcard/monero");
+        boost::filesystem::path dir(path+"/monero");
         boost::filesystem::create_directories(dir);
         Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
         Monero::WalletManager *walletManager = test->getWalletManager();
 
 
-        Monero::Wallet *wallet = walletManager->createWallet("/sdcard/monero/example.keys", "password", "English", true);
+        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
 
     }
 
@@ -115,10 +115,14 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
                     payment_id = payment_id.substr(0,16);
                 std::string note = wallet2->get_tx_note(pd.m_tx_hash);
                 string temp = "" ;
-                temp += "BH: "+to_string(pd.m_block_height);
-                temp += " Amount: "+  print_money(pd.m_amount);
+                temp = "{\"type\":\"in\" ,\"amount\": " +print_money(pd.m_amount)+","+
+                        "\"TX:\": \""+ string_tools::pod_to_hex(pd.m_tx_hash)+"\" ,"
+                        "\"fee\":"+ "0.0 ,"
+                        "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
 
-                temp += " TX: "+ cryptonote::short_hash_str(pd.m_tx_hash);
+
+
+
 
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(true,temp )));
             }
@@ -145,16 +149,17 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
                     payment_id = payment_id.substr(0,16);
                 std::string note = wallet2->get_tx_note(i->first);
                 string temp  ="" ;
-                temp += "BH: "+to_string(pd.m_block_height);
-                temp += " Amount: "+ print_money(pd.m_amount_in - change - fee);
-
-                temp += "\nTX: "+cryptonote::short_hash_str(i->first)+"\n";
+                temp = "{\"type\":\"out\" ,\"amount\": " +print_money(pd.m_amount_in - change - fee)+","+
+                       "\"TX:\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"
+                               "\"fee\":"+ print_money(fee)+","+
+                               "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
 
 
 
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(false, temp)));
             }
         }
+
 
     return output;
 
@@ -320,6 +325,7 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
                         dust_not_in_fee += ptx_vector[n].dust;
                 }
 
+
 //            std::stringstream prompt;
 //            prompt << boost::format(tr("Sending %s.  ")) % print_money(total_sent);
 //            if (ptx_vector.size() > 1)
@@ -399,6 +405,7 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
 //        fail_msg_writer() << tr("Not enough money in unlocked balance");
         }
         catch (const tools::error::tx_not_possible &e) {
+
 //        LOG_PRINT_L0(boost::format("not enough money to transfer, available only %s, transaction amount %s = %s + %s (fee)") %
 //                     print_money(e.available()) %
 //                     print_money(e.tx_amount() + e.fee())  %
@@ -438,7 +445,7 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
         }
         catch (const tools::error::wallet_internal_error &e) {
             LOG_ERROR("internal error: " << e.to_string());
-            ///  fail_msg_writer() << tr("internal error: ") << e.what();
+            //  fail_msg_writer() << tr("internal error: ") << e.what();
         }
         catch (const std::exception &e) {
             LOG_ERROR("unexpected error: " << e.what());

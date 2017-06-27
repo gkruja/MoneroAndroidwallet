@@ -56,7 +56,7 @@ public:
         }
         delete wallet2;
     }
-    void GenerateWallet();
+
     bool Check_Connection();
 
     void
@@ -64,7 +64,7 @@ public:
 
     bool init(string DaemonAddress, string Password, string WalletName, bool testnet, int loglevel);
 
-    bool GenerateWallet(string Name, string Password);
+    bool GenerateWallet(string path, string Name, string Password);
     std::multimap<uint64_t, std::pair<bool,std::string>> get_transfers();
 
     double Balance() {
@@ -88,7 +88,6 @@ public:
 private:
 
     tools::wallet2 *wallet2 = nullptr;
-
 
 
 
