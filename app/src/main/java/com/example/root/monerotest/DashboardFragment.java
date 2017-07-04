@@ -53,19 +53,15 @@ public class DashboardFragment extends Fragment {
             else {
                 Balance.setText(String.format("%.3f",Balance())+"\tXMR");
                 unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
+
                 String transfers = Transfers();
 
-
-
                 ListView Histroy = (ListView) view.findViewById(R.id.listView1);
-
 
 
                 TransactionAdapter adapter = new TransactionAdapter(getActivity(),
                                             R.layout.item_history, transfers);
 
-
-                //Histroy.setAdapter(arrayAdapter);
                 Histroy.setAdapter(adapter);
             }
         }

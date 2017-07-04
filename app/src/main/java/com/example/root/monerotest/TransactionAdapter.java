@@ -34,38 +34,32 @@ public class TransactionAdapter extends ArrayAdapter {
         mContext = context;
         //TODO:Load the Json String to ArrayList<Transactions>
         JSONArray receivedObject = null;
+
         try{
             receivedObject = new JSONArray(jsonString);
-        }catch (JSONException e){e.printStackTrace();}
+        }catch (JSONException e){e.printStackTrace(); return;}
 
 
         //TODO: set mData.
-        mData = new ArrayList<Transaction>();
-        try {
-        for (int i = 0; i < receivedObject.length(); i++) {
-           JSONObject temp = new JSONObject();
+        mData = new ArrayList<>();
+            try {
+                for (int i = 0; i < receivedObject.length(); i++) {
+                JSONObject temp;
 
-              temp =  receivedObject.getJSONObject(i);
+                temp =  receivedObject.getJSONObject(i);
 
-            String amount = String.format("%9f",temp.getDouble("amount"));
-            String fee = String.format("%.5f",temp.getDouble("fee"));
-            String type = temp.getString("type");
-            Transaction insert;
-            if(type == "in") {
+                String amount = String.format("%9f",temp.getDouble("amount"));
+                String fee = String.format("%.5f",temp.getDouble("fee"));
+                String type = temp.getString("type");
+                Transaction insert;
+
+             if(type.equals("in") ) {
                 insert  = new Transaction(true, amount, fee, temp.getString("date"), "");
-            }
-            else {
+            }else {
                  insert = new Transaction(false, amount, fee, temp.getString("date"), "");
-
             }
-
-
             mData.add(insert);
-
-
         }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

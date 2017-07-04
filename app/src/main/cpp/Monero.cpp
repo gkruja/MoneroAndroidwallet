@@ -7,7 +7,6 @@ using namespace epee;
 using namespace cryptonote;
 
 
-
     bool AndroidWallet::init(string DaemonAddress, string Password, string WalletName, bool testnet, int loglevel){
 
         if(loglevel == 0 || loglevel < 5) {
@@ -48,7 +47,6 @@ using namespace cryptonote;
 
     }
 
-
     bool AndroidWallet::GenerateWallet(string path,string Name,string Password) {
 
         boost::filesystem::path dir(path+"/monero");
@@ -74,8 +72,8 @@ using namespace cryptonote;
         return true;
     }
 
-static std::string get_human_readable_timestamp(uint64_t ts)
-{
+    static std::string get_human_readable_timestamp(uint64_t ts)
+    {
     char buffer[64];
     if (ts < 1234567890)
         return "<unknown>";
@@ -95,7 +93,7 @@ static std::string get_human_readable_timestamp(uint64_t ts)
     return std::string(buffer);
 }
 
-std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfers() {
+    std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfers() {
 
         std::multimap<uint64_t, std::pair<bool,std::string>> output;
 
@@ -166,15 +164,6 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
 
 
     }
-
-
-
-
-
-
-
-
-
 
     void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId, uint32_t mixin,
                   uint32_t priority) {
@@ -460,7 +449,7 @@ std::multimap<uint64_t, std::pair<bool,std::string>> AndroidWallet::get_transfer
 
     }
 
-AndroidWallet::AndroidWallet() {
+    AndroidWallet::AndroidWallet() {
     delete wallet2;
     wallet2 = nullptr;
 }

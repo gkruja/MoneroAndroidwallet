@@ -32,14 +32,13 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_layout);;
+        setContentView(R.layout.drawer_layout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DashboardFragment fragment = DashboardFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
-
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
