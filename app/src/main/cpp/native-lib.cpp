@@ -29,6 +29,28 @@ Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet(
     return init;
 }
 
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_root_monerotest_Services_SyncWalletService_WalletHeight(
+        JNIEnv *env,
+        jobject /* this */) {
+
+    return wallet2.WalletLocalHeight();
+
+}
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_root_monerotest_Services_SyncWalletService_DaemonHeight(
+        JNIEnv *env,
+        jobject /* this */) {
+
+    return wallet2.DaemonHeight();
+
+}
+
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_DashboardFragment_CheckConnection(

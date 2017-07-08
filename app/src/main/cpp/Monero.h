@@ -83,10 +83,28 @@ public:
 
         return final;
     }
+    uint64_t WalletLocalHeight(){
+        local_height = wallet2->get_blockchain_current_height();
+        return local_height;
+    }
+
+    uint64_t DaemonHeight(){
+        string err;
+         bc_height = wallet2->get_daemon_blockchain_height(err);
+
+        if(err.empty())
+        {
+            return bc_height;
+        } else{
+            return 0;
+        }
+    }
+
 
 
 private:
-
+    uint64_t local_height = 0;
+    uint64_t bc_height = 0 ;
     tools::wallet2 *wallet2 = nullptr;
 
 
