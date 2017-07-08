@@ -9,7 +9,7 @@ Monero::AndroidWallet  wallet2;
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_root_monerotest_MainActivity_InitWallet(
+Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet(
         JNIEnv *env,
         jobject /* this */,jstring Path)
 {

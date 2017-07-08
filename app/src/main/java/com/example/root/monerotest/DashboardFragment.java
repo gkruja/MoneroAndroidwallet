@@ -36,35 +36,35 @@ public class DashboardFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         View view  = getView();
-
-        if(view != null){
-            TextView connected = (TextView) view.findViewById(R.id.textView7);
-
-            TextView Balance = (TextView) view.findViewById(R.id.textView11);
-            TextView unLockedBalance = (TextView) view.findViewById(R.id.textView10);
-
-
-            boolean con = CheckConnection();
-            if(!con)
-            {
-                connected.setText("DISCONNECTED!!!");
-                connected.setTextColor(Color.RED);
-            }
-            else {
-                Balance.setText(String.format("%.3f",Balance())+"\tXMR");
-                unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
-
-                String transfers = Transfers();
-
-                ListView Histroy = (ListView) view.findViewById(R.id.listView1);
-
-
-                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
-                                            R.layout.item_history, transfers);
-
-                Histroy.setAdapter(adapter);
-            }
-        }
+//
+//        if(view != null){
+//            TextView connected = (TextView) view.findViewById(R.id.textView7);
+//
+//            TextView Balance = (TextView) view.findViewById(R.id.textView11);
+//            TextView unLockedBalance = (TextView) view.findViewById(R.id.textView10);
+//
+//
+//            boolean con = CheckConnection();
+//            if(!con)
+//            {
+//                connected.setText("DISCONNECTED!!!");
+//                connected.setTextColor(Color.RED);
+//            }
+//            else {
+//                Balance.setText(String.format("%.3f",Balance())+"\tXMR");
+//                unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
+//
+//                String transfers = Transfers();
+//
+//                ListView Histroy = (ListView) view.findViewById(R.id.listView1);
+//
+//
+//                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
+//                                            R.layout.item_history, transfers);
+//
+//                Histroy.setAdapter(adapter);
+//            }
+//        }
     }
 
 

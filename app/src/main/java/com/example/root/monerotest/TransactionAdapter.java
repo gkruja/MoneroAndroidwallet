@@ -67,7 +67,7 @@ public class TransactionAdapter extends ArrayAdapter {
 
     @Override
     public int getCount() {
-        if(mData != null && mData.size() > 1){
+        if(mData != null && mData.size() >= 1){
             return mData.size();
         }
         return 10;
@@ -75,7 +75,7 @@ public class TransactionAdapter extends ArrayAdapter {
     @Nullable
     @Override
     public Transaction getItem(int position) {
-        if(mData != null && mData.size() > 1){
+        if(mData != null && mData.size() >= 1){
             return mData.get(position);
         }
         return null;

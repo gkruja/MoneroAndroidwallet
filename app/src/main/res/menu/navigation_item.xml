@@ -19,6 +19,15 @@
             android:title="@string/nav_item_send_title" />
     </group>
 
+    <group android:id="@+id/group_4"
+           android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_receive"
+            android:checked="false"
+            android:icon="@drawable/ic_call_received_black_24dp"
+            android:title="@string/nav_item_receive_title" />
+    </group>
+
     <group android:id="@+id/group_2"
            android:checkableBehavior="single">
         <item

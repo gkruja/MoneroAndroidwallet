@@ -31,27 +31,27 @@ public class SendFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view  = getView();
 
-        Button Send = (Button) view.findViewById(R.id.button);
-
-        Send.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-
-                EditText amount = (EditText) view.findViewById(R.id.amount);
-
-                EditText address = (EditText) view.findViewById(R.id.address);
-
-                if(!address.getText().toString().isEmpty() && !amount.getText().toString().isEmpty())
-                {
-                    SendTransfer(address.getText().toString(),Double.parseDouble(amount.getText().toString()),4);
-
-                    Toast.makeText(getActivity(),"Address:"+address.getText().toString(),Toast.LENGTH_LONG).show();
-
-                }else{
-                    Toast.makeText(getActivity(),"Somefeild not filled",Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
+//        Button Send = (Button) view.findViewById(R.id.button);
+//
+//        Send.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//
+//                EditText amount = (EditText) view.findViewById(R.id.amount);
+//
+//                EditText address = (EditText) view.findViewById(R.id.address);
+//
+//                if(!address.getText().toString().isEmpty() && !amount.getText().toString().isEmpty())
+//                {
+//                    SendTransfer(address.getText().toString(),Double.parseDouble(amount.getText().toString()),4);
+//
+//                    Toast.makeText(getActivity(),"Address:"+address.getText().toString(),Toast.LENGTH_LONG).show();
+//
+//                }else{
+//                    Toast.makeText(getActivity(),"Somefeild not filled",Toast.LENGTH_LONG).show();
+//
+//                }
+//            }
+//        });
     }
     @Nullable
     @Override

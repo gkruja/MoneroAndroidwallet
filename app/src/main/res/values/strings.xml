@@ -16,9 +16,29 @@
         <item>16</item>
     </string-array>
 
+    <string-array name="priorityValues">
+        <item>1x fee</item>
+        <item>2x fee</item>
+        <item>3x fee</item>
+    </string-array>
+
     <string name="nav_item_dashboard_title">Dashboard</string>
     <string name="nav_item_send_title">Send</string>
     <string name="nav_item_sign_title">Sign</string>
+    <string name="nav_item_receive_title">Receive</string>
     <string name="nav_item_settings_title">Settings</string>
+
+    <string name="button_generate">Generate</string>
+    <string name="title_amount">Amount</string>
+    <string name="title_desc">Description</string>
+    <string name="title_paymentID">Payment ID</string>
+    <string name="title_address">Address</string>
+    <string name="title_address_integrated">Integrated address</string>
+    <string name="title_priority">Transaction priority</string>
+    <string name="title_mixin">Privacy level</string>
+    <string name="hint_howmuch">Fee not included</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_amount">Amount</string>
+    <string name="hint_paymentID">(Optional)</string>
 
 </resources>

@@ -1,32 +1,43 @@
 package com.example.root.monerotest;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.monerotest.MenuFragments.ReceiveFragment;
 import com.example.root.monerotest.MenuFragments.SendFragment;
 import com.example.root.monerotest.MenuFragments.SettingsFragment;
 import com.example.root.monerotest.MenuFragments.SignFragment;
+import com.example.root.monerotest.Services.SyncWalletService;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements ServiceConnection {
 
     // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
-    }
+
+
+    private boolean mBound;
+    private SyncWalletService mService;
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -42,8 +53,51 @@ public class MainActivity extends AppCompatActivity  {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View customActionBar = inflater.inflate(R.layout.ab_main, null);
+
+        setCustomActionBar(customActionBar);
+
+        setNavigationDrawerLayoutListener();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mBound = false;
+        Intent serviceIntent = new Intent(this, SyncWalletService.class);
+        bindService(serviceIntent, this, BIND_AUTO_CREATE);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        unbindService(this);
+//        mBound = false;
+    }
+
+    /**
+     * Service Connection's required methods.
+     */
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        SyncWalletService.SyncServiceBinder binder = (SyncWalletService.SyncServiceBinder)
+                service;
+
+        mService = binder.getService();
+        mBound = true;
+    }
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mBound = false;
+    }
 
 
+    /**
+     * Init and setup most UI and listeners.
+     */
+    private void setNavigationDrawerLayoutListener(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -64,6 +118,7 @@ public class MainActivity extends AppCompatActivity  {
                         SendFragment fragmentSend = SendFragment.newInstance();
                         setTitle("Send");
                         getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentSend).commit();
+
                         break;
                     case R.id.item_sign:
                         Toast.makeText(MainActivity.this, "sign", Toast.LENGTH_SHORT).show();
@@ -78,40 +133,64 @@ public class MainActivity extends AppCompatActivity  {
                         setTitle("Settings");
                         getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
+
+                    case R.id.item_receive:
+                        ReceiveFragment fragment = ReceiveFragment.newInstance();
+                        setTitle("Receive");
+                        getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+                        break;
                 }
                 mDrawerLayout.closeDrawer(Gravity.START);
                 return true;
             }
         });
-
-        String extStore = System.getenv("EXTERNAL_STORAGE");
-
-
-        boolean connected = InitWallet(extStore);
-
     }
+
+    public void setCustomActionBar(View view){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar == null)
+            return;
+
+        (view.findViewById(R.id.action_open_menu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: open the navigation drawer.
+                if(mDrawerLayout == null)
+                    return;
+
+                mDrawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled (false);
+
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        actionBar.setCustomView(view);
+    }
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
+    //public native boolean InitWallet(String path);
 
-
-    public native boolean InitWallet(String path);
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_drop_menu){
-
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.drop_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if(item.getItemId() == R.id.action_drop_menu){
+//
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.drop_menu, menu);
+//        return true;
+//    }
 
 }
