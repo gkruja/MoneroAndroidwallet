@@ -92,6 +92,12 @@ public:
         string err;
          bc_height = wallet2->get_daemon_blockchain_height(err);
 
+        uint32_t version =0 ;
+
+        if(! wallet2->check_connection(&version)){
+            return 0;
+        }
+
         if(err.empty())
         {
             return bc_height;
