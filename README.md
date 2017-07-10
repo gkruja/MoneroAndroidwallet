@@ -15,6 +15,7 @@ The JNI file is called native-lib.cpp located in the app/src/main/cpp
 There, you have to specify where the native function will be used. For example: 
 
 `Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet` 
+
  (       Project package        )(Package)  (   FileName   ) (Method)
 
 
