@@ -44,7 +44,7 @@ depending  on the fragment that the user is currently located.
 - [x] Send transactions (little buggy, needs more testing).
 - [x] Display all transactions from wallet into a Listview. 
 
-## What is currently missing?
+### What is currently missing?
 
 - [] \(Optional) Splash screen to give a better experience to user while loading libs.
 - [] Initial activity to either generate a new wallet or load one from file storage.
