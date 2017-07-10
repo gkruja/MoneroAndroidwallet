@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".QRGenerator.QRGeneratorActivity"/>
+        <activity android:name=".QRGenerator.QRGeneratorActivity"
+            android:theme="@style/QRGeneratorTheme"/>
 
         <service android:name=".Services.SyncWalletService"
             android:exported="false"/>

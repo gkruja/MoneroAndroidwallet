@@ -43,6 +43,8 @@
 
 
 
+    <string name="qr_bitmap">QR image with Payment ID</string>
+
     <string name="alert_dialog_no_connection_to_daemon">Cant connect to the node. Please check network or node</string>
 
 </resources>

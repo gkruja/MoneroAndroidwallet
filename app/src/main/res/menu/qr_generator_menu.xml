@@ -3,9 +3,9 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="lancaster.ve.abdelnourandrea_ce02.Activities.MainActivity">
     <item
-        android:id="@+id/action_drop_menu"
+        android:id="@+id/action_save_to_storage"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_drawer"
+        android:icon="@drawable/ic_save_black_24dp"
         android:title="drop menu"
         app:showAsAction="ifRoom"/>
 </menu>
