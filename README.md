@@ -33,7 +33,9 @@ At this moment, all the navigation is contain in a drawerLayout that holds a
 navationView (The menu). Every item of the menu is attach to its corresponding
 fragment. Only one (1) activity is being used. The toolbar changes custom views
 depending  on the fragment that the user is currently located.
+Here's a gallery of the screens so far.
 
+![Album](http://imgur.com/a/mluUb)
 
 
 ### Currently completed but might be missing more testing
