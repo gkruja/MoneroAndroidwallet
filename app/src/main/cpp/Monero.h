@@ -106,6 +106,17 @@ public:
         }
     }
 
+    void refresh(){
+        uint32_t version =0;
+        bool connection = wallet2->check_connection(&version);
+
+        if(connection){
+            wallet2->refresh();
+
+            wallet2->store();
+        }
+    }
+
 
 
 private:

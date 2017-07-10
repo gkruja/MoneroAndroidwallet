@@ -18,12 +18,12 @@ Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet(
 
    if (std::ifstream(path+"/monero/example.keys")) {
 
-        init = wallet2.init("159.203.250.205:38081", "password", path+"/monero/example", true, 4);
+        init = wallet2.init("192.168.1.141:28081", "password", path+"/monero/example", true, 4);
    } else
    {
        wallet2.GenerateWallet(path,"example","password");
 
-      init =   wallet2.init("159.203.250.205:38081", "password", path+"/moenro/example", true, 4);
+      init =   wallet2.init("192.168.1.141:28081", "password", path+"/moenro/example", true, 4);
    }
 
     return init;
@@ -48,6 +48,39 @@ Java_com_example_root_monerotest_Services_SyncWalletService_DaemonHeight(
         jobject /* this */) {
 
     return wallet2.DaemonHeight();
+
+}
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_root_monerotest_MainActivity_WalletHeight(
+        JNIEnv *env,
+        jobject /* this */) {
+
+    return wallet2.WalletLocalHeight();
+
+}
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_root_monerotest_MainActivity_DaemonHeight(
+        JNIEnv *env,
+        jobject /* this */) {
+
+    return wallet2.DaemonHeight();
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_root_monerotest_Services_SyncWalletService_WalletRefresh(
+        JNIEnv *env,
+        jobject /* this */) {
+
+    wallet2.refresh();
+
 
 }
 

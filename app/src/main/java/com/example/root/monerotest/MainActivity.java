@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +33,7 @@ import com.example.root.monerotest.MenuFragments.SignFragment;
 import com.example.root.monerotest.Services.SyncWalletService;
 
 
-public class MainActivity extends AppCompatActivity implements ServiceConnection {
+public class MainActivity extends AppCompatActivity implements ServiceConnection, SyncWalletService.Callbacks {
 
     // Used to load the 'native-lib' library on application startup.
 
@@ -39,14 +41,23 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private boolean mBound;
     private SyncWalletService mService;
     private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
+
+    private ProgressBar mSyncProgressBar;
+    private TextView mHeightValue;
+
+    private Handler mHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        mHandler = new Handler();
 
         DashboardFragment fragment = DashboardFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
@@ -60,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         setCustomActionBar(customActionBar);
 
         setNavigationDrawerLayoutListener();
-
     }
 
     @Override
@@ -69,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mBound = false;
         Intent serviceIntent = new Intent(this, SyncWalletService.class);
         bindService(serviceIntent, this, BIND_AUTO_CREATE);
+
     }
     @Override
     protected void onStop() {
@@ -84,9 +95,11 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     public void onServiceConnected(ComponentName name, IBinder service) {
         SyncWalletService.SyncServiceBinder binder = (SyncWalletService.SyncServiceBinder)
                 service;
-
         mService = binder.getService();
+        mService.registerClient(this);
         mBound = true;
+
+        mService.checkHeight();
     }
     @Override
     public void onServiceDisconnected(ComponentName name) {
@@ -171,26 +184,70 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         actionBar.setCustomView(view);
     }
 
+    /**
+     * Callbacks so the service can report back to main activity.
+     */
+    @Override
+    public void setViewActionBar() {
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customActionBar = inflater.inflate(R.layout.ab_sync_progress, null);
+
+        //Hold reference to both views in custom action bar view.
+        mSyncProgressBar = (ProgressBar) customActionBar.findViewById(R.id.progress_bar_sync);
+        mHeightValue = (TextView) customActionBar.findViewById(R.id.height_value);
+
+        //TODO: hook the post handler with progress bar.
+
+
+
+        setCustomActionBar(customActionBar);
+    }
+
+    @Override
+    public void updateProgressBar(int current, int max) {
+
+        if(mSyncProgressBar == null)
+            return;
+
+
+        mSyncProgressBar.setMax(max);
+
+        runnableUpdateBar.run();
+
+
+    }
+
+     private Runnable  runnableUpdateBar = new  Runnable() {
+
+         @Override
+         public void run() {
+             try {
+                 updateBar();
+             } catch (Exception ignored) {
+
+             } finally {
+                 mHandler.postDelayed(runnableUpdateBar, 1000);
+             }
+         }
+     };
+
+
+    private void updateBar(){
+        if(mSyncProgressBar == null)
+            return;
+
+
+        mSyncProgressBar.setProgress(WalletHeight());
+
+        mHeightValue.setText(String.valueOf(WalletHeight()) + "/" +"949815");
+    }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
+    public native int WalletHeight();
+    public native int DaemonHeight();
     //public native boolean InitWallet(String path);
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if(item.getItemId() == R.id.action_drop_menu){
-//
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.drop_menu, menu);
-//        return true;
-//    }
-
 }

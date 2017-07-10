@@ -29,14 +29,10 @@ using namespace cryptonote;
         wallet2->load( WalletName, "password");
         bool init = wallet2->init(std::move(DaemonAddress));
 
-        wallet2->refresh();
-
-        bool connect;
-
-        connect = wallet2->check_connection();
+        uint32_t version =0 ;
+        bool connect = wallet2->check_connection(&version);
 
 
-        wallet2->store();
         if (connect) {
             return true;
 
