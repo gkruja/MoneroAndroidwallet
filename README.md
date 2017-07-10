@@ -2,8 +2,8 @@
 
 This App is using the NDK (native development kit) to port the native Monero C++/C 
 code into it. The NDK is using a interface called JNI. This interface will sit
-between the Monero native code and the Java application. This proyect is public and
-available for anyone who wants to colaborate. 
+between the Monero native code and the Java application. This project is public and
+available for anyone who wants to collaborate.
 
 ### NDK native functions
 
@@ -30,7 +30,7 @@ loading the lib in the file that will be using it. For example:
 ### App's UI
 
 At this moment, all the navigation is contain in a drawerLayout that holds a 
-navationView (The menu). Every item of the menu is attach to its corresponding
+`NavigationView` (The menu). Every item of the menu is attached to its corresponding
 fragment. Only one (1) activity is being used. The toolbar changes custom views
 depending  on the fragment that the user is currently located.
 
@@ -43,7 +43,7 @@ depending  on the fragment that the user is currently located.
 - [x] Load wallet from external storage.
 - [x] Sync wallet to remote node.
 - [x] Send transactions (little buggy, needs more testing).
-- [x] Display all transactions from wallet into a Listview. 
+- [x] Display all transactions from wallet into a `ListView`.
 
 ### What is currently missing?
 
