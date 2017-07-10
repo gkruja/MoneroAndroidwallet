@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.example.root.monerotest.MenuFragments.ReceiveFragment;
 import com.example.root.monerotest.MenuFragments.SendFragment;
 import com.example.root.monerotest.MenuFragments.SettingsFragment;
 import com.example.root.monerotest.MenuFragments.SignFragment;
+import com.example.root.monerotest.QRGenerator.QRGeneratorActivity;
 import com.example.root.monerotest.Services.SyncWalletService;
 
 
@@ -174,6 +176,22 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 mDrawerLayout.openDrawer(Gravity.LEFT);
             }
         });
+
+
+        ImageButton qrGeneratorIcon = (ImageButton) view.findViewById(R.id.action_open_qr_generator);
+        if(qrGeneratorIcon != null){
+
+            qrGeneratorIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent startQRGenActivity = new Intent(MainActivity.this, QRGeneratorActivity.class);
+                    //TODO: pass the data to the next activity.
+
+                    startActivity(startQRGenActivity);
+                }
+            });
+
+        }
 
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowHomeEnabled (false);

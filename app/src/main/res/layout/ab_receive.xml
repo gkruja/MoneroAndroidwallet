@@ -15,7 +15,7 @@
 
 
     <ImageButton
-        android:id="@+id/btn3"
+        android:id="@+id/action_open_qr_generator"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_alignParentRight="true"
