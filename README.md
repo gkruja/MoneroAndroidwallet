@@ -1,11 +1,11 @@
-### Monero Android Wallet (NDK & SDK java)
+# Monero Android Wallet (NDK & SDK java)
 
 This App is using the NDK (native development kit) to port the native Monero C++/C 
 code into it. The NDK is using a interface called JNI. This interface will sit
 between the Monero native code and the Java application. This proyect is public and
 available for anyone who wants to colaborate. 
 
-# NDK native functions
+### NDK native functions
 
 To create a native function you will need to use the keyword native like this:
 `public native int DaemonHeight()`
@@ -26,7 +26,7 @@ loading the lib in the file that will be using it. For example:
     }`
 
 
-# App's UI
+### App's UI
 
 At this moment, all the navigation is contain in a drawerLayout that holds a 
 navationView (The menu). Every item of the menu is attach to its corresponding
@@ -35,7 +35,7 @@ depending  on the fragment that the user is currently located.
 
 
 
-## Currently completed but might be missing more testing
+### Currently completed but might be missing more testing
 
 - [x] Binaries for Armv7 (32bit), armV8 (64bit), and x86.
 - [x] Generate a new wallet.
