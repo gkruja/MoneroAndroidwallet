@@ -10,12 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.root.monerotest.R;
 
-/**
- * Andrea Abdelnour
- * MDF III - 0517
- * Java file name:  SettingsFragment
- * 6/15/17
- */
+
 
 public class SettingsFragment extends Fragment {
 

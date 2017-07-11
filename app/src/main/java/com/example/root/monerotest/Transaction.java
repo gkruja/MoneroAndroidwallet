@@ -1,8 +1,5 @@
 package com.example.root.monerotest;
 
-/**
- * Created by Andrea on 6/21/2017.
- */
 
 public class Transaction {
 

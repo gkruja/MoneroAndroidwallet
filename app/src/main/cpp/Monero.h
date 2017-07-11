@@ -54,6 +54,7 @@ public:
         {
             wallet2->store();
         }
+        wallet2->deinit();
         delete wallet2;
     }
 
@@ -117,13 +118,24 @@ public:
         }
     }
 
+    string address(){
+        return wallet2->get_account().get_public_address_str(wallet2->testnet());
+    }
 
+    string get_payment_id(){
+        crypto::hash8 payment_id;
+        payment_id = crypto::rand<crypto::hash8>();
+    string temp = epee::string_tools::pod_to_hex(payment_id);
+
+
+        return temp;
+
+    }
 
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;
     tools::wallet2 *wallet2 = nullptr;
-
 
 
 };

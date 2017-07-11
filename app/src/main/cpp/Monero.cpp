@@ -116,9 +116,6 @@ using namespace cryptonote;
                         "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
 
 
-
-
-
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(true,temp )));
             }
         }
@@ -148,8 +145,6 @@ using namespace cryptonote;
                        "\"TX:\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"
                                "\"fee\":"+ print_money(fee)+","+
                                "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
-
-
 
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(false, temp)));
             }
@@ -338,9 +333,6 @@ using namespace cryptonote;
 //
 //            }
                 //  prompt << ENDL << tr("Is this okay?  (Y/Yes/N/No): ");
-
-
-
             }
 
             // actually commit the transactions
@@ -365,11 +357,7 @@ using namespace cryptonote;
 
                     wallet2->store_tx_info();
 
-
-
                 }
-
-
         }
         catch (const tools::error::daemon_busy &) {
             //    fail_msg_writer() << tr("daemon is busy. Please try again later.");

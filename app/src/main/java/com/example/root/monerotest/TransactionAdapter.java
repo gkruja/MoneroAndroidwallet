@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.zip.Inflater;
 
-/**
- * Created by Andrea on 6/21/2017.
- */
+
 
 public class TransactionAdapter extends ArrayAdapter {
 

@@ -164,18 +164,28 @@ Java_com_example_root_monerotest_DashboardFragment_UnlockedBalance(
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_MenuFragments_SendFragment_SendTransfer(
-        JNIEnv *env,
-        jobject /* this */,jstring Address,jdouble Amount,jint Mixin)
-{
-
+        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount,jint Mixin) {
 
     string address = env->GetStringUTFChars(Address,0);
 
-
     wallet2.transfer(address,Amount *1000000000000,"",4,0);
-
-
 
     return env->NewStringUTF(wallet2.pending_tx.c_str());
 }
 
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_QRGenerator_QRGeneratorFragment_GeneratePaymentId(
+        JNIEnv *env, jobject /* this */) {
+
+    return env->NewStringUTF(wallet2.get_payment_id().c_str());
+}
+
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_QRGenerator_QRGeneratorFragment_GetAddress(
+        JNIEnv *env, jobject /* this */) {
+
+    return env->NewStringUTF(wallet2.address().c_str());
+}

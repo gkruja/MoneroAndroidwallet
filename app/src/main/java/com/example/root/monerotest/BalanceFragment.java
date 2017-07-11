@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by gkruj on 6/18/2017.
- */
 
 public class BalanceFragment extends Fragment {
 

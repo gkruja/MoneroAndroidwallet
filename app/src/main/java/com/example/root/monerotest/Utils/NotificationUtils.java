@@ -10,12 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
 
-/**
- * Andrea Abdelnour
- * MDF III - 0517
- * Java file name:  NotificationUtils
- * 7/8/17
- */
 
 public class NotificationUtils {
 

@@ -12,12 +12,7 @@ import android.view.ViewGroup;
 import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
 
-/**
- * Andrea Abdelnour
- * MDF III - 0517
- * Java file name:  ReceiveFragment
- * 7/6/17
- */
+
 
 public class ReceiveFragment extends Fragment {
 
@@ -29,6 +24,7 @@ public class ReceiveFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.receive_fragment,container, false);
     }
 

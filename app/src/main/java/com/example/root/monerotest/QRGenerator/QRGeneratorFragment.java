@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,12 @@ import com.google.zxing.qrcode.encoder.QRCode.*;
 
 import net.glxn.qrgen.android.QRCode;
 
-/**
- * Andrea Abdelnour
- * MDF III - 0517
- * Java file name:  QRGeneratorFragment
- * 7/10/17
- */
+
 
 public class QRGeneratorFragment extends Fragment {
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     public static final String TAG = "QRGeneratorFragment.TAG";
 
@@ -41,12 +40,36 @@ public class QRGeneratorFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View views = getView();
-        if(views == null)
+        if (views == null)
             return;
 
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-        Bitmap QRImage = QRCode.from("asdasdasd").bitmap();
+
+        String address = GetAddress();
+        String PaymentId = GeneratePaymentId();
+        float amount =0;
+        Bitmap QRImage;
+
+        if(amount !=0 && PaymentId != null) {
+             QRImage = QRCode.from("monero:" + address + "?tx_amount="+Float.toString(amount)+"&tx_payment_id="+PaymentId).bitmap();
+        }
+        else if(PaymentId != null){
+            QRImage =  QRCode.from("monero:" + address + "?tx_payment_id="+PaymentId).bitmap();
+        }
+        else if(amount != 0){
+            QRImage = QRCode.from("monero:" + address + "?tx_amount="+Float.toString(amount)).bitmap();
+        }
+        else {
+            QRImage = QRCode.from("monero:" + address ).bitmap();
+        }
 
         ((ImageView) views.findViewById(R.id.imageview_qr)).setImageBitmap(QRImage);
+
     }
+
+
+    public native String GeneratePaymentId();
+
+    public native String GetAddress();
 }

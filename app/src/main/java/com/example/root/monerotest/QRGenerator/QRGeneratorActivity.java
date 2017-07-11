@@ -13,12 +13,7 @@ import android.view.MenuItem;
 
 import com.example.root.monerotest.R;
 
-/**
- * Andrea Abdelnour
- * MDF III - 0517
- * Java file name:  QRGeneratorActivity
- * 7/10/17
- */
+
 
 public class QRGeneratorActivity extends AppCompatActivity{
 
