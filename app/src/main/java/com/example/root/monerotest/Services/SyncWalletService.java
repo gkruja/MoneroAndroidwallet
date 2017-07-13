@@ -26,6 +26,8 @@ public class SyncWalletService extends Service {
         System.loadLibrary("native-lib");
     }
 
+    public static final String ACTION_SYNC_DONE = "com.example.root.monerotest.SYNC_DONE";
+
     private Notification mNotification;
     private Callbacks mCallbacks;
     private Thread mThread;
@@ -36,6 +38,7 @@ public class SyncWalletService extends Service {
 
         initWallet();
     }
+
 
     public void initWallet(){
         //String extStore = System.getenv("EXTERNAL_STORAGE");
@@ -98,6 +101,11 @@ public class SyncWalletService extends Service {
             @Override
             public void run() {
                 WalletRefresh();
+
+                Intent syncCompleted = new Intent();
+                syncCompleted.setAction(ACTION_SYNC_DONE);
+
+                sendBroadcast(syncCompleted);
             }
         };
 
@@ -119,6 +127,7 @@ public class SyncWalletService extends Service {
             mThread.interrupt();
     }
 
+
     public void registerClient(Activity activity){
         mCallbacks = (Callbacks)activity;
     }
@@ -139,7 +148,6 @@ public class SyncWalletService extends Service {
     public interface Callbacks{
         void setViewActionBar();
         void updateProgressBar(int current, int max);
-
     }
     /**
      * Binder to hook client-server  between main activity and service.

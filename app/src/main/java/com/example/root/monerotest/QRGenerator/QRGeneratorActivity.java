@@ -142,7 +142,7 @@ public class QRGeneratorActivity extends AppCompatActivity{
 
         if(externalStorage == null)
             return null;
-        
+
 
         File QRCodesfolder = new File(externalStorage, dirname);
 

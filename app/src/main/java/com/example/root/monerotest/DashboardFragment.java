@@ -2,7 +2,10 @@ package com.example.root.monerotest;
 
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.root.monerotest.Services.SyncWalletService;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,40 +31,27 @@ import java.util.List;
 public class DashboardFragment extends Fragment {
 
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
+                setData();
+            }
+        }
+    };
 
-        View view  = getView();
-//
-//        if(view != null){
-//            TextView connected = (TextView) view.findViewById(R.id.textView7);
-//
-//            TextView Balance = (TextView) view.findViewById(R.id.textView11);
-//            TextView unLockedBalance = (TextView) view.findViewById(R.id.textView10);
-//
-//
-//            boolean con = CheckConnection();
-//            if(!con)
-//            {
-//                connected.setText("DISCONNECTED!!!");
-//                connected.setTextColor(Color.RED);
-//            }
-//            else {
-//                Balance.setText(String.format("%.3f",Balance())+"\tXMR");
-//                unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
-//
-//                String transfers = Transfers();
-//
-//                ListView Histroy = (ListView) view.findViewById(R.id.listView1);
-//
-//
-//                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
-//                                            R.layout.item_history, transfers);
-//
-//                Histroy.setAdapter(adapter);
-//            }
-//        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SyncWalletService.ACTION_SYNC_DONE);
+        getActivity().registerReceiver(mBroadcast, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(mBroadcast);
     }
 
     @Override
@@ -73,6 +65,43 @@ public class DashboardFragment extends Fragment {
         View customActionBar = inflater.inflate(R.layout.ab_main, null);
 
         activity.setCustomActionBar(customActionBar);
+    }
+
+
+    public void setData(){
+        View view  = getView();
+
+        if(view != null){
+            TextView connected = (TextView) view.findViewById(R.id.textView7);
+
+            TextView Balance = (TextView) view.findViewById(R.id.textView11);
+            TextView unLockedBalance = (TextView) view.findViewById(R.id.textView10);
+
+
+            boolean con = CheckConnection();
+            if(!con)
+            {
+                connected.setText("DISCONNECTED!!!");
+                connected.setTextColor(Color.RED);
+            }
+            else {
+                Balance.setText(String.format("%.3f",Balance())+"\tXMR");
+                unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
+
+                String transfers = Transfers();
+
+                if(transfers.isEmpty()){
+                    return;
+                }
+
+                ListView Histroy = (ListView) view.findViewById(R.id.listView1);
+
+                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
+                        R.layout.item_transaction, transfers);
+
+                Histroy.setAdapter(adapter);
+            }
+        }
     }
 
     public static DashboardFragment newInstance() {

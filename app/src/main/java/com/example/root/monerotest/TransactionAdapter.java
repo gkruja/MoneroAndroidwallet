@@ -87,7 +87,7 @@ public class TransactionAdapter extends ArrayAdapter {
         if (convertView == null) {
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.item_history, parent,false);
+            convertView = inflater.inflate(R.layout.item_transaction, parent,false);
 
             holder = new ViewHolder();
 
@@ -102,6 +102,9 @@ public class TransactionAdapter extends ArrayAdapter {
         }
 
         Transaction transaction = getItem(position);
+        if(transaction == null)
+            return null;
+
         if(transaction.getFee().equals("0.00000"))
         {
             holder.amountTextView.setTextColor(Color.rgb(54,176,91));
