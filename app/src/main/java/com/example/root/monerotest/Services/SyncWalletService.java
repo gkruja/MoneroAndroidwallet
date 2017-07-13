@@ -28,6 +28,7 @@ public class SyncWalletService extends Service {
 
     private Notification mNotification;
     private Callbacks mCallbacks;
+    private Thread mThread;
 
     @Override
     public void onCreate() {
@@ -93,7 +94,6 @@ public class SyncWalletService extends Service {
         Toast.makeText(this, String.valueOf(mNotification.when), Toast.LENGTH_SHORT).show();
         startForeground(0x101, mNotification);
 
-
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -101,8 +101,8 @@ public class SyncWalletService extends Service {
             }
         };
 
-        Thread syncThread = new Thread(runnable);
-        syncThread.start();
+        mThread = new Thread(runnable);
+        mThread.start();
     }
 
     @Nullable
@@ -115,8 +115,9 @@ public class SyncWalletService extends Service {
     public void onDestroy() {
         super.onDestroy();
         stopForeground(true);
+        if(mThread != null)
+            mThread.interrupt();
     }
-
 
     public void registerClient(Activity activity){
         mCallbacks = (Callbacks)activity;

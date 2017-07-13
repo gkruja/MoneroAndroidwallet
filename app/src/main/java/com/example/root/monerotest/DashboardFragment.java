@@ -2,6 +2,7 @@ package com.example.root.monerotest;
 
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -61,6 +62,18 @@ public class DashboardFragment extends Fragment {
 //        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        MainActivity activity = (MainActivity) getActivity();
+
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View customActionBar = inflater.inflate(R.layout.ab_main, null);
+
+        activity.setCustomActionBar(customActionBar);
+    }
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
@@ -69,9 +82,6 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dashboard_fragment, container, false);
-
-
-
     }
 
     public native boolean CheckConnection();

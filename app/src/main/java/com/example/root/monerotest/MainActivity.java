@@ -61,17 +61,13 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         mHandler = new Handler();
 
+        //Launch dashboard intent.
         DashboardFragment fragment = DashboardFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View customActionBar = inflater.inflate(R.layout.ab_main, null);
-
-        setCustomActionBar(customActionBar);
-
+        //Set up left menu listeners to items.
         setNavigationDrawerLayoutListener();
     }
 
@@ -166,6 +162,13 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         if(actionBar == null)
             return;
 
+        View previousCustomView = actionBar.getCustomView();
+
+        if(previousCustomView != null){
+            actionBar.setCustomView(null);
+        }
+
+
         (view.findViewById(R.id.action_open_menu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,6 +191,22 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                     //TODO: pass the data to the next activity.
 
                     startActivity(startQRGenActivity);
+                }
+            });
+
+        }
+
+        ImageButton qrGeneratorReader = (ImageButton) view.findViewById(R.id.action_read_qr);
+
+        if(qrGeneratorReader != null){
+
+            qrGeneratorReader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent startQRGenActivity = new Intent(MainActivity.this, QRGeneratorActivity.class);
+                    //TODO: reader the QR code.
+
+                    //startActivity(startQRGenActivity);
                 }
             });
 
@@ -216,8 +235,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mHeightValue = (TextView) customActionBar.findViewById(R.id.height_value);
 
         //TODO: hook the post handler with progress bar.
-
-
 
         setCustomActionBar(customActionBar);
     }

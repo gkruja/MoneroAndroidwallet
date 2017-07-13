@@ -3,6 +3,7 @@ package com.example.root.monerotest.MenuFragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import com.example.root.monerotest.R;
 
 
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragment {
 
 
     public static SettingsFragment newInstance() {
