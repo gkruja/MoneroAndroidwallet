@@ -44,6 +44,7 @@ depending  on the fragment that the user is currently located.
 - [x] Sync wallet to remote node.
 - [x] Send transactions (little buggy, needs more testing).
 - [x] Display all transactions from wallet into a `ListView`.
+- [x] Ability to generate a QR image using the integrated address.
 
 ### What is currently missing?
 
@@ -51,10 +52,9 @@ depending  on the fragment that the user is currently located.
 - [] Initial activity to either generate a new wallet or load one from file storage.
 		**note:** *For loading wallet from location I'd like to using some sort of file 
 		explorer to allow the user to chose the location. However, i'm up for ideas.*
-
 - [] Functionality to select a remote node in the settings fragment.
-- [] Ability to generate a QR image using the integrated address. (Receive Fragment)
 - [] Ability to read a QR image and validate data. (Send Fragment)
+- [] Wallet will automatically update itself whenever the phone is plugged and connect to WIFI.
 - [] if you have more ideas or features, please PM me.
 
 
