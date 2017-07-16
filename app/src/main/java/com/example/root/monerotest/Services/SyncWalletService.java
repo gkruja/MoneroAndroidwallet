@@ -40,11 +40,11 @@ public class SyncWalletService extends Service {
 
 
     public void initWallet(){
-        //String extStore = System.getenv("EXTERNAL_STORAGE");
-        File externalStorage = Environment.getExternalStorageDirectory();
+        String extStore = System.getenv("EXTERNAL_STORAGE");
+        //File externalStorage = Environment.getExternalStorageDirectory();
 
         //Load wallet fmor external storage
-        boolean success = InitWallet(externalStorage.getAbsolutePath());
+        boolean success = InitWallet(extStore);
 
 
         if(success){

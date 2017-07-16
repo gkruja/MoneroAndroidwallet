@@ -52,9 +52,10 @@ public class TransactionAdapter extends ArrayAdapter {
                 Transaction insert;
 
              if(type.equals("in") ) {
-                insert  = new Transaction(true, amount, fee, temp.getString("date"), "");
+
+                insert  = new Transaction(true, amount, fee, temp.getString("date"),temp.getString("time"));
             }else {
-                 insert = new Transaction(false, amount, fee, temp.getString("date"), "");
+                 insert = new Transaction(false, amount, fee, temp.getString("date"), temp.getString("time"));
             }
             mData.add(insert);
         }
@@ -94,6 +95,8 @@ public class TransactionAdapter extends ArrayAdapter {
             holder.amountTextView = (TextView) convertView.findViewById(R.id.amount_value);
             holder.feeTextView = (TextView) convertView.findViewById(R.id.fee_value);
             holder.dateTextView = (TextView) convertView.findViewById(R.id.date);
+            holder.timeTextView = (TextView) convertView.findViewById(R.id.time);
+
             convertView.setTag(holder);
         }
         else {
@@ -118,10 +121,12 @@ public class TransactionAdapter extends ArrayAdapter {
        holder.amountTextView.setText(transaction.getAmount());
         holder.feeTextView.setText(transaction.getFee());
         holder.dateTextView.setText(transaction.getDate());
+        holder.timeTextView.setText(transaction.getTime());
+
         holder.mAmount = transaction.getAmount();
         holder.mFee = transaction.getFee();
         holder.mDateString = transaction.getDate();
-        holder.mTimeString = "";
+        holder.mTimeString = transaction.getTime();
 
 
         return convertView;
@@ -131,6 +136,7 @@ public class TransactionAdapter extends ArrayAdapter {
         public TextView amountTextView;
         public TextView feeTextView;
         public TextView dateTextView;
+        public TextView timeTextView;
         public String mAmount;
         public String mFee;
         public String mDateString;

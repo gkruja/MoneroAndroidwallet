@@ -61,7 +61,7 @@ public class DashboardFragment extends Fragment {
 
                 String transfers = Transfers();
 
-                if(transfers.isEmpty()){
+                if(transfers.equals("[]")){
                     return;
                 }
 

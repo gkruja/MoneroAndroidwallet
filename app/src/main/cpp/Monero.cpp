@@ -44,13 +44,39 @@ using namespace cryptonote;
 
     bool AndroidWallet::GenerateWallet(string path,string Name,string Password) {
 
-        boost::filesystem::path dir(path+"/monero");
-        boost::filesystem::create_directories(dir);
-        Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
-        Monero::WalletManager *walletManager = test->getWalletManager();
+//        boost::filesystem::path dir(path+"/monero");
+//        boost::filesystem::create_directories(dir);
+//        Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
+//        Monero::WalletManager *walletManager = test->getWalletManager();
+//
+//
+//        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
+//        delete  wallet;
+        remove("/sdcard/monerolog");
+        mlog_configure("/sdcard/monerolog", false);
+        mlog_set_log_level(4);
+        bool keys_file;
+        bool wallet_file;
+        tools::wallet2::wallet_exists(path+"/monero/"+Name,keys_file,wallet_file);
 
+        wallet2 = new tools::wallet2(true, false);
+        if(wallet_file || keys_file)
+        {
+            return false;
+        }
+        crypto::secret_key secretKey , recover_key;
+        try {
+           recover_key = wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
+        }catch (const std::exception &e){
+            LOG_ERROR("wallet Error creating:" << e.what());
+            return false;
+        }
 
-        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
+        if(recover_key != nullptr)
+        {
+            delete recover_key;
+        }
+        return true;
 
     }
 
@@ -67,24 +93,33 @@ using namespace cryptonote;
         return true;
     }
 
-    static std::string get_human_readable_timestamp(uint64_t ts)
+    static std::string get_human_readable_date(uint64_t ts)
     {
     char buffer[64];
+
     if (ts < 1234567890)
         return "<unknown>";
     time_t tt = ts;
     struct tm tm;
-#ifdef WIN32
-    gmtime_s(&tm, &tt);
-#else
+
     gmtime_r(&tt, &tm);
-#endif
-    uint64_t now = time(NULL);
-    uint64_t diff = ts > now ? ts - now : now - ts;
-    if (diff > 24*3600)
+
         strftime(buffer, sizeof(buffer), "%Y-%m-%d", &tm);
-    else
-        strftime(buffer, sizeof(buffer), "%I:%M:%S %p", &tm);
+    return std::string(buffer);
+}
+static std::string get_human_readable_time(uint64_t ts)
+{
+    char buffer[64];
+
+    if (ts < 1234567890)
+        return "<unknown>";
+    time_t tt = ts;
+    struct tm tm;
+
+    gmtime_r(&tt, &tm);
+
+    strftime(buffer, sizeof(buffer), "%I:%M:%S %p", &tm);
+
     return std::string(buffer);
 }
 
@@ -110,9 +145,11 @@ using namespace cryptonote;
                 std::string note = wallet2->get_tx_note(pd.m_tx_hash);
                 string temp = "" ;
                 temp = "{\"type\":\"in\" ,\"amount\": " +print_money(pd.m_amount)+","+
-                        "\"TX:\": \""+ string_tools::pod_to_hex(pd.m_tx_hash)+"\" ,"
-                        "\"fee\":"+ "0.0 ,"
-                        "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
+                        "\"TX:\": \""+ string_tools::pod_to_hex(pd.m_tx_hash)+"\" ,"+
+                        "\"Payment_id:\": \""+ payment_id+"\" ,"+
+                        "\"fee\":"+ "0.0 ,"+
+                        "\"time\": \""+ get_human_readable_time(pd.m_timestamp)+"\","+
+                        "\"date\": \""+get_human_readable_date(pd.m_timestamp)+"\"}";
 
 
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(true,temp )));
@@ -141,9 +178,11 @@ using namespace cryptonote;
                 std::string note = wallet2->get_tx_note(i->first);
                 string temp  ="" ;
                 temp = "{\"type\":\"out\" ,\"amount\": " +print_money(pd.m_amount_in - change - fee)+","+
-                       "\"TX:\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"
-                               "\"fee\":"+ print_money(fee)+","+
-                               "\"date\": \""+get_human_readable_timestamp(pd.m_timestamp)+"\"}";
+                       "\"TX:\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"+
+                        "\"Payment_id:\": \""+ payment_id+"\" ,"+
+                        "\"fee\":"+ print_money(fee)+","+
+                        "\"time\": \""+ get_human_readable_time(pd.m_timestamp)+"\","+
+                       "\"date\": \""+get_human_readable_date(pd.m_timestamp)+"\"}";
 
                 output.insert(std::make_pair(pd.m_block_height, std::make_pair(false, temp)));
             }
@@ -195,6 +234,7 @@ using namespace cryptonote;
         if (!r) {
             //   fail_msg_writer() << tr("payment id has invalid format, expected 16 or 64 character hex string: ") << payment_id_str;
             //return true;
+            return; "payment id has invalid format, expected 16 or 64 character hex string: ";
         }
         payment_id_seen = true;
 
@@ -360,6 +400,7 @@ using namespace cryptonote;
         }
         catch (const tools::error::daemon_busy &) {
             //    fail_msg_writer() << tr("daemon is busy. Please try again later.");
+            string ret = "daemon is busy. Please try again later.";
         }
         catch (const tools::error::no_connection_to_daemon &) {
             //   fail_msg_writer() << tr("no connection to daemon. Please make sure daemon is running.");
@@ -367,15 +408,18 @@ using namespace cryptonote;
         catch (const tools::error::wallet_rpc_error &e) {
             LOG_ERROR("RPC error: " << e.to_string());
             //      fail_msg_writer() << tr("RPC error: ") << e.what();
+            string ret = "unknown error";
         }
         catch (const tools::error::get_random_outs_error &e) {
             //  fail_msg_writer() << tr("failed to get random outputs to mix: ") << e.what();
+            string ret = "unknown error";
         }
         catch (const tools::error::not_enough_money &e) {
 //        LOG_PRINT_L0(boost::format("not enough money to transfer, available only %s, sent amount %s") %
 //                     print_money(e.available()) %
 //                     print_money(e.tx_amount()));
 //        fail_msg_writer() << tr("Not enough money in unlocked balance");
+            string ret = "unknown error";
         }
         catch (const tools::error::tx_not_possible &e) {
 
@@ -385,6 +429,7 @@ using namespace cryptonote;
 //                     print_money(e.tx_amount()) %
 //                     print_money(e.fee()));
 //        fail_msg_writer() << tr("Failed to find a way to create transactions. This is usually due to dust which is so small it cannot pay for itself in fees, or trying to send more money than the unlocked balance, or not leaving enough for fees");
+            string ret = "unknown error";
         }
         catch (const tools::error::not_enough_outs_to_mix &e) {
 //        auto writer = fail_msg_writer();
@@ -393,6 +438,7 @@ using namespace cryptonote;
 //        {
 //            writer << "\n" << tr("output amount") << " = " << print_money(outs_for_amount.first) << ", " << tr("found outputs to mix") << " = " << outs_for_amount.second;
 //        }
+            string ret = "unknown error";
         }
         catch (const tools::error::tx_not_constructed &) {
             //   fail_msg_writer() << tr("transaction was not constructed");
@@ -402,31 +448,40 @@ using namespace cryptonote;
             std::string reason = e.reason();
             // if (!reason.empty())
             //    fail_msg_writer() << tr("Reason: ") << reason;
+            string ret = "unknown error";
         }
         catch (const tools::error::tx_sum_overflow &e) {
             //  fail_msg_writer() << e.what();
+            string ret = "unknown error";
         }
         catch (const tools::error::zero_destination &) {
             //  fail_msg_writer() << tr("one of destinations is zero");
+            string ret = "unknown error";
         }
         catch (const tools::error::tx_too_big &e) {
             //  fail_msg_writer() << tr("failed to find a suitable way to split transactions");
+            string ret = "unknown error";
         }
         catch (const tools::error::transfer_error &e) {
             LOG_ERROR("unknown transfer error: " << e.to_string());
             //   fail_msg_writer() << tr("unknown transfer error: ") << e.what();
+            string ret = "unknown error";
         }
         catch (const tools::error::wallet_internal_error &e) {
             LOG_ERROR("internal error: " << e.to_string());
             //  fail_msg_writer() << tr("internal error: ") << e.what();
+            string ret = "unknown error";
         }
         catch (const std::exception &e) {
             LOG_ERROR("unexpected error: " << e.what());
             //  fail_msg_writer() << tr("unexpected error: ") << e.what();
+            string ret = "unknown error";
         }
         catch (...) {
             LOG_ERROR("unknown error");
             //fail_msg_writer() << tr("unknown error");
+            string ret = "unknown error";
+
         }
 
 
