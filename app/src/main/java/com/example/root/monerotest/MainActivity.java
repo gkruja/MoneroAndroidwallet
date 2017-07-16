@@ -84,19 +84,18 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         //Launch dashboard intent.
         DashboardFragment fragment = DashboardFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
-
+        mCurrentFragmentID = R.id.item_dashboard;
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //setup custom action bar
-        View mainAB = inflater.inflate(R.layout.ab_main, null);
+        View mainAB = inflater.inflate(R.layout.ab_main, nullParent);
         setCustomActionBar(mainAB);
 
         //Set up left menu listeners to items.
         setNavigationDrawerLayoutListener();
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -107,12 +106,14 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         Intent serviceIntent = new Intent(this, SyncWalletService.class);
         bindService(serviceIntent, this, BIND_AUTO_CREATE);
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         unregisterReceiver(mBroadcast);
+        unbindService(this);
     }
+
+
 
     public void resumeActionBar(){
         mIsSyncing = false;
@@ -138,8 +139,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         if(customActionBar != null)
             setCustomActionBar(customActionBar);
-
-        unbindService(this);
     }
     /**
      * Service Connection's required methods.
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
              } catch (Exception ignored) {
 
              } finally {
-                 mHandler.postDelayed(runnableUpdateBar, 1000);
+                 mHandler.postDelayed(runnableUpdateBar, 3000);
              }
          }
      };

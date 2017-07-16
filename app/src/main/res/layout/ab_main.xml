@@ -9,9 +9,9 @@
         android:id="@+id/action_open_menu"
         android:background="@color/colorPrimary"
         android:src="@drawable/ic_menu_black_24dp"
-        android:layout_width="36dp"
+        android:layout_width="@dimen/actionBarIconSize"
         android:layout_alignParentLeft="true"
-        android:layout_height="36dp"
+        android:layout_height="@dimen/actionBarIconSize"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"/>
 
@@ -20,10 +20,10 @@
         android:id="@+id/action_sync_wallet"
         android:background="@color/colorPrimary"
         android:src="@drawable/ic_sync_black_24dp"
-        android:layout_width="36dp"
+        android:layout_width="@dimen/actionBarIconSize"
         android:layout_alignParentEnd="true"
-        android:layout_height="36dp"
-        android:layout_marginEnd="0dp"
+        android:layout_height="@dimen/actionBarIconSize"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"/>
 
 </RelativeLayout>

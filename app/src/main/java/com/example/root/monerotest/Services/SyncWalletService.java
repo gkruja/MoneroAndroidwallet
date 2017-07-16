@@ -51,19 +51,7 @@ public class SyncWalletService extends Service {
             Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
             //checkHeight();
         }else{
-            MainActivity x;
-            if(getApplicationContext() instanceof MainActivity){
-                //TODO: fix change toast for alertdialog.
-                x = (MainActivity) getApplicationContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(x);
-                builder.setMessage(getString(R.string.alert_dialog_no_connection_to_daemon));
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }else{
-                Toast.makeText(this, "Can't connect to Daemon", Toast.LENGTH_SHORT).show();
                 stopSelf();
-            }
-
         }
     }
 

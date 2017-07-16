@@ -6,16 +6,16 @@
 
     <ImageButton
         android:id="@+id/action_open_menu"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/actionBarIconSize"
+        android:layout_height="@dimen/actionBarIconSize"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_menu_black_24dp"
         android:background="@color/colorPrimary"/>
 
     <ImageButton
         android:id="@+id/action_read_qr"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/actionBarIconSize"
+        android:layout_height="@dimen/actionBarIconSize"
         android:src="@drawable/ic_qr_generate_24_24"
         android:background="@color/colorPrimary"
         android:layout_marginEnd="30dp"
@@ -24,8 +24,8 @@
 
     <ImageButton
         android:id="@+id/action_send"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/actionBarIconSize"
+        android:layout_height="@dimen/actionBarIconSize"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_send_black_24dp"

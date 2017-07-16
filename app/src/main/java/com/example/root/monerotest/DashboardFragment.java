@@ -36,6 +36,8 @@ public class DashboardFragment extends Fragment {
         activity.setCustomActionBar(customActionBar);
     }
 
+    
+
 
     public void setData(){
         View view  = getView();
