@@ -25,13 +25,4 @@ public class SettingsFragment extends PreferenceFragment {
         return new SettingsFragment();
     }
 
-
-
-
-//
-//    @Nullable
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.settings_fragment, container, false);
-//    }
 }

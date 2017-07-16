@@ -23,6 +23,10 @@
         <activity android:name=".QRGenerator.QRGeneratorActivity"
             android:theme="@style/QRGeneratorTheme"/>
 
+        <activity android:name=".QRReader.QRReaderActivity"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <service android:name=".Services.SyncWalletService"
             android:exported="false"/>
     </application>

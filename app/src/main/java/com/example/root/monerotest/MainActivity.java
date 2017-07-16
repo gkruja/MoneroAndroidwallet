@@ -1,15 +1,10 @@
 package com.example.root.monerotest;
-
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -19,11 +14,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +26,7 @@ import com.example.root.monerotest.MenuFragments.SendFragment;
 import com.example.root.monerotest.MenuFragments.SettingsFragment;
 import com.example.root.monerotest.MenuFragments.SignFragment;
 import com.example.root.monerotest.QRGenerator.QRGeneratorActivity;
+import com.example.root.monerotest.QRReader.QRReaderActivity;
 import com.example.root.monerotest.Services.SyncWalletService;
 
 
@@ -88,19 +82,19 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     }
 
 
-    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                View customActionBar = inflater.inflate(R.layout.ab_main, null);
-
-                setCustomActionBar(customActionBar);
-            }
-        }
-    };
+//    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
+//
+//                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//                View customActionBar = inflater.inflate(R.layout.ab_main, null);
+//
+//                setCustomActionBar(customActionBar);
+//            }
+//        }
+//    };
 
     /**
      * Service Connection's required methods.
@@ -219,10 +213,22 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
             qrGeneratorReader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent startQRGenActivity = new Intent(MainActivity.this, QRGeneratorActivity.class);
-                    //TODO: reader the QR code.
+                    Intent startQRReaderActivity = new Intent(MainActivity.this, QRReaderActivity.class);
+                    startActivity(startQRReaderActivity);
+                }
+            });
 
-                    //startActivity(startQRGenActivity);
+        }
+
+        ImageButton actionSend = (ImageButton) view.findViewById(R.id.action_send);
+
+        if(actionSend != null){
+
+            actionSend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: handle sending action.
+
                 }
             });
 
@@ -308,5 +314,4 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      */
     public native int WalletHeight();
     public native int DaemonHeight();
-    //public native boolean InitWallet(String path);
 }

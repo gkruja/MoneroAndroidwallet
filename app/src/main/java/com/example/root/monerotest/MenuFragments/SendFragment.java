@@ -20,6 +20,7 @@ import com.example.root.monerotest.R;
 public class SendFragment extends Fragment {
 
     public native String SendTransfer(String Address, double Amount, int mixin);
+
     public static SendFragment newInstance() {
         return new SendFragment();
     }
