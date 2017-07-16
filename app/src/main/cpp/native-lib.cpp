@@ -35,7 +35,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_example_root_monerotest_Services_SyncWalletService_WalletHeight(
         JNIEnv *env,
-        jobject /* this */) {…
+        jobject /* this */) {
 
     return wallet2.WalletLocalHeight();
 

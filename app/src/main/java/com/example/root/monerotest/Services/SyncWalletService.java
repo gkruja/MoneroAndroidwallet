@@ -51,7 +51,6 @@ public class SyncWalletService extends Service {
             Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
             //checkHeight();
         }else{
-
             MainActivity x;
             if(getApplicationContext() instanceof MainActivity){
                 //TODO: fix change toast for alertdialog.
@@ -61,7 +60,7 @@ public class SyncWalletService extends Service {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }else{
-                Toast.makeText(this, "CANT CONNECT OT THE FKING DAMEON", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Can't connect to Daemon", Toast.LENGTH_SHORT).show();
                 stopSelf();
             }
 
@@ -71,50 +70,54 @@ public class SyncWalletService extends Service {
     public void checkHeight(){
 
         int walletHeight = 0;
-        int daemonHeigh = 0;
+        int daemonHeight = 0;
 
         walletHeight = WalletHeight();
-        daemonHeigh = DaemonHeight();
+        daemonHeight = DaemonHeight();
 
-        if(daemonHeigh == 0)
+        if(daemonHeight == 0)
             return;
 
         if(mCallbacks == null)
             return;
 
 
-        if(walletHeight < daemonHeigh){
-            // change the toolbar view to sync one.
-            mCallbacks.setViewActionBar();
+        if(walletHeight < daemonHeight){
             //Update progress bar
-            mCallbacks.updateProgressBar(walletHeight, daemonHeigh);
+            mCallbacks.updateProgressBar(walletHeight, daemonHeight);
             syncWalletToDaemon();
+        }else{
+            Toast.makeText(this, "wallet height not less than daemonHeight",Toast.LENGTH_SHORT).show();
         }
     }
 
     public void syncWalletToDaemon(){
+        //Create a foreground service attach to a notification.
         mNotification = NotificationUtils.getSyncWalletNotification(getApplicationContext());
-        Toast.makeText(this, String.valueOf(mNotification.when), Toast.LENGTH_SHORT).show();
         startForeground(0x101, mNotification);
+
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                //Needs its own thread. otherwise it will block the main thread for 5 min at least.
                 WalletRefresh();
 
+                //Report back when syncing is complete.
                 Intent syncCompleted = new Intent();
                 syncCompleted.setAction(ACTION_SYNC_DONE);
 
-                //Toast.makeText(SyncWalletService.this, "Wallet just synced", Toast.LENGTH_SHORT).show();
-                stopForeground(true);
+                //Send a breadcast to update
                 sendBroadcast(syncCompleted);
+
+                //Stop foreground service no longer needed.
+                stopForeground(true);
             }
         };
 
         mThread = new Thread(runnable);
         mThread.start();
     }
-
 
     @Nullable
     @Override
@@ -126,8 +129,11 @@ public class SyncWalletService extends Service {
     public void onDestroy() {
         super.onDestroy();
         stopForeground(true);
+        mNotification = null;
         if(mThread != null)
             mThread.interrupt();
+            mThread = null;
+            mCallbacks = null;
     }
 
 
@@ -149,9 +155,7 @@ public class SyncWalletService extends Service {
      */
 
     public interface Callbacks{
-        void setViewActionBar();
         void updateProgressBar(int current, int max);
-        void restoreProgressBar();
     }
     /**
      * Binder to hook client-server  between main activity and service.

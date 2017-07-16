@@ -20,34 +20,10 @@ import com.example.root.monerotest.Services.SyncWalletService;
 public class DashboardFragment extends Fragment {
 
 
-    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
-                setData();
-                setActionBar();
-            }
-        }
-    };
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SyncWalletService.ACTION_SYNC_DONE);
-        getActivity().registerReceiver(mBroadcast, filter);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().unregisterReceiver(mBroadcast);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-
+        setActionBar();
     }
 
     private void setActionBar(){

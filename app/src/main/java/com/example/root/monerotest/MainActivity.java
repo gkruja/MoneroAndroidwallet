@@ -1,7 +1,9 @@
 package com.example.root.monerotest;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
@@ -16,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,18 +36,39 @@ import com.example.root.monerotest.Services.SyncWalletService;
 public class MainActivity extends AppCompatActivity implements ServiceConnection, SyncWalletService.Callbacks {
 
     // Used to load the 'native-lib' library on application startup.
-
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     private boolean mBound;
+    private int mMaxSyncValue;
     private SyncWalletService mService;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
-
+    private Boolean mIsSyncing;
+    private int mCurrentFragmentID;
     private ProgressBar mSyncProgressBar;
     private TextView mHeightValue;
-
     private Handler mHandler;
+    final ViewGroup nullParent = null;
 
+    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
+                resumeActionBar();
+
+                switch (mCurrentFragmentID){
+                    case R.id.item_dashboard:
+                        DashboardFragment fragment = (DashboardFragment) getFragmentManager().
+                                                        findFragmentById(R.id.main_content);
+                        if(fragment != null)
+                            fragment.setData();
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +78,20 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        mIsSyncing = false;
         mHandler = new Handler();
 
         //Launch dashboard intent.
         DashboardFragment fragment = DashboardFragment.newInstance();
         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
 
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //setup custom action bar
+        View mainAB = inflater.inflate(R.layout.ab_main, null);
+        setCustomActionBar(mainAB);
 
         //Set up left menu listeners to items.
         setNavigationDrawerLayoutListener();
@@ -70,32 +101,46 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     protected void onStart() {
         super.onStart();
         mBound = false;
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(SyncWalletService.ACTION_SYNC_DONE);
+        registerReceiver(mBroadcast, filter);
         Intent serviceIntent = new Intent(this, SyncWalletService.class);
         bindService(serviceIntent, this, BIND_AUTO_CREATE);
-
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-//        unbindService(this);
-//        mBound = false;
+        unregisterReceiver(mBroadcast);
     }
 
+    public void resumeActionBar(){
+        mIsSyncing = false;
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customActionBar = null;
 
-//    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
-//
-//                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//                View customActionBar = inflater.inflate(R.layout.ab_main, null);
-//
-//                setCustomActionBar(customActionBar);
-//            }
-//        }
-//    };
+        //Switch to corresponding fragment depending
+        // on which one is currently visible
+        switch (mCurrentFragmentID){
+            case R.id.item_dashboard:
+                customActionBar = inflater.inflate(R.layout.ab_main, nullParent);
+                break;
+            case R.id.item_send:
+                customActionBar = inflater.inflate(R.layout.ab_send, nullParent);
+                break;
+            case R.id.item_settings:
+                customActionBar = inflater.inflate(R.layout.ab_main, nullParent);
+                break;
+            case R.id.item_receive:
+                customActionBar = inflater.inflate(R.layout.ab_receive, nullParent);
+                break;
+        }
 
+        if(customActionBar != null)
+            setCustomActionBar(customActionBar);
+
+        unbindService(this);
+    }
     /**
      * Service Connection's required methods.
      */
@@ -106,15 +151,11 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mService = binder.getService();
         mService.registerClient(this);
         mBound = true;
-
-        mService.checkHeight();
     }
     @Override
     public void onServiceDisconnected(ComponentName name) {
         mBound = false;
     }
-
-
     /**
      * Init and setup most UI and listeners.
      */
@@ -127,37 +168,35 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
                 switch (item.getItemId()){
                     case R.id.item_dashboard:
-                        Toast.makeText(MainActivity.this, "dashboard", Toast.LENGTH_SHORT).show();
-
                         DashboardFragment dashboardFragment = DashboardFragment.newInstance();
-                        setTitle("Dashboard");
+                        setTitle(getString(R.string.nav_item_dashboard_title));
+                        mCurrentFragmentID = R.id.item_dashboard;
                         getFragmentManager().beginTransaction().replace(R.id.main_content, dashboardFragment).commit();
                         break;
                     case R.id.item_send:
-                        Toast.makeText(MainActivity.this, "send", Toast.LENGTH_SHORT).show();
-
                         SendFragment fragmentSend = SendFragment.newInstance();
-                        setTitle("Send");
+                        setTitle(getString(R.string.nav_item_send_title));
+                        mCurrentFragmentID = R.id.item_send;
                         getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentSend).commit();
 
                         break;
                     case R.id.item_sign:
-                        Toast.makeText(MainActivity.this, "sign", Toast.LENGTH_SHORT).show();
-
                         SignFragment fragmentSign = SignFragment.newInstance();
-                        setTitle("Sign");
+                        setTitle(getString(R.string.nav_item_sign_title));
+                        mCurrentFragmentID = R.id.item_sign;
                         getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentSign).commit();
                         break;
                     case R.id.item_settings:
-                        Toast.makeText(MainActivity.this, "settings", Toast.LENGTH_SHORT).show();
                         SettingsFragment settingsFragment = SettingsFragment.newInstance();
-                        setTitle("Settings");
+                        setTitle(getString(R.string.nav_item_settings_title));
+                        mCurrentFragmentID = R.id.item_settings;
                         getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
 
                     case R.id.item_receive:
                         ReceiveFragment fragment = ReceiveFragment.newInstance();
-                        setTitle("Receive");
+                        setTitle(getString(R.string.nav_item_receive_title));
+                        mCurrentFragmentID = R.id.item_receive;
                         getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
                         break;
                 }
@@ -165,9 +204,19 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 return true;
             }
         });
+
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View customActionBar = inflater.inflate(R.layout.ab_main, nullParent);
+        setCustomActionBar(customActionBar);
     }
 
     public void setCustomActionBar(View view){
+
+        if(mIsSyncing!= null && mIsSyncing)
+            return;
+
         ActionBar actionBar = getSupportActionBar();
         if(actionBar == null)
             return;
@@ -182,10 +231,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         (view.findViewById(R.id.action_open_menu)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: open the navigation drawer.
                 if(mDrawerLayout == null)
                     return;
-
                 mDrawerLayout.openDrawer(Gravity.LEFT);
             }
         });
@@ -198,8 +245,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 @Override
                 public void onClick(View v) {
                     Intent startQRGenActivity = new Intent(MainActivity.this, QRGeneratorActivity.class);
-                    //TODO: pass the data to the next activity.
-
                     startActivity(startQRGenActivity);
                 }
             });
@@ -223,12 +268,30 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         ImageButton actionSend = (ImageButton) view.findViewById(R.id.action_send);
 
         if(actionSend != null){
-
             actionSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //TODO: handle sending action.
+                }
+            });
 
+        }
+
+        ImageButton actionSync = (ImageButton) view.findViewById(R.id.action_sync_wallet);
+
+        if(actionSync != null){
+            actionSync.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: handle sync the wallet
+
+                    Toast.makeText(MainActivity.this, "Action Sync", Toast.LENGTH_SHORT).show();
+                    //if no connection. return
+
+                    if(mService == null)
+                        return;
+
+                    mService.checkHeight();
                 }
             });
 
@@ -247,42 +310,35 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      * Callbacks so the service can report back to main activity.
      */
     @Override
-    public void setViewActionBar() {
+    public void updateProgressBar(int current, int max) {
 
+        //inflate progress bar custom view.
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customActionBar = inflater.inflate(R.layout.ab_sync_progress, null);
+        View customActionBar = inflater.inflate(R.layout.ab_sync_progress, nullParent);
 
         //Hold reference to both views in custom action bar view.
         mSyncProgressBar = (ProgressBar) customActionBar.findViewById(R.id.progress_bar_sync);
         mHeightValue = (TextView) customActionBar.findViewById(R.id.height_value);
 
-        //TODO: hook the post handler with progress bar.
-
+        //load view.
         setCustomActionBar(customActionBar);
-    }
-
-    @Override
-    public void updateProgressBar(int current, int max) {
 
         if(mSyncProgressBar == null)
             return;
 
-
+        mMaxSyncValue = max;
+        mIsSyncing = true;
         mSyncProgressBar.setMax(max);
-
         runnableUpdateBar.run();
-
-
     }
 
-    @Override
-    public void restoreProgressBar() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View customActionBar = inflater.inflate(R.layout.ab_main, null);
 
-        setCustomActionBar(customActionBar);
+    private void updateBar(){
+        if(mSyncProgressBar == null)
+            return;
+        mSyncProgressBar.setProgress(WalletHeight());
+        mHeightValue.setText(String.valueOf(WalletHeight()) + "/ " + mMaxSyncValue);
     }
-
     private Runnable  runnableUpdateBar = new  Runnable() {
 
          @Override
@@ -298,20 +354,11 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      };
 
 
-    private void updateBar(){
-        if(mSyncProgressBar == null)
-            return;
 
-
-        mSyncProgressBar.setProgress(WalletHeight());
-
-        mHeightValue.setText(String.valueOf(WalletHeight()) + "/" +"949815");
-    }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
     public native int WalletHeight();
-    public native int DaemonHeight();
 }

@@ -8,7 +8,8 @@
 
         <EditTextPreference
             android:key="edittext_key_address_to_connect"
-            android:title="Node Configiguration"
+            android:title="(IP:PORT ex: 127.0.0.1:8080)"
+            android:textColor="@color/gray_title_color"
             android:dialogTitle="Enter IP and Port"
             />
     </PreferenceCategory>
@@ -19,15 +20,17 @@
 
         <ListPreference
             android:key="network_list_key"
-            android:title="network_list_title"/>
+            android:title="network_list_title"
+            android:entryValues="@array/networkPrefValue"
+            android:entries="@array/networkPrefValue"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Update wallet at night"
+        android:title="Sync wallet when sleep"
         android:key="category_sync_at_night">
 
         <SwitchPreference
-            android:title="switch pref title"
+            android:title="when charging and WIFI on"
             android:key="switch_sync_night"/>
 
     </PreferenceCategory>
