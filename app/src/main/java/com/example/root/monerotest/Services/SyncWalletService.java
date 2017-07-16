@@ -43,12 +43,13 @@ public class SyncWalletService extends Service {
     public void initWallet(){
         //String extStore = System.getenv("EXTERNAL_STORAGE");
         File externalStorage = Environment.getExternalStorageDirectory();
+
+        //Load wallet fmor external storage
         boolean success = InitWallet(externalStorage.getAbsolutePath());
 
 
-
         if(success){
-            Toast.makeText(this, "asdasdadsasda", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
             //checkHeight();
         }else{
 
@@ -105,6 +106,8 @@ public class SyncWalletService extends Service {
                 Intent syncCompleted = new Intent();
                 syncCompleted.setAction(ACTION_SYNC_DONE);
 
+                //Toast.makeText(SyncWalletService.this, "Wallet just synced", Toast.LENGTH_SHORT).show();
+                stopForeground(true);
                 sendBroadcast(syncCompleted);
             }
         };
@@ -112,6 +115,7 @@ public class SyncWalletService extends Service {
         mThread = new Thread(runnable);
         mThread.start();
     }
+
 
     @Nullable
     @Override
@@ -148,6 +152,7 @@ public class SyncWalletService extends Service {
     public interface Callbacks{
         void setViewActionBar();
         void updateProgressBar(int current, int max);
+        void restoreProgressBar();
     }
     /**
      * Binder to hook client-server  between main activity and service.

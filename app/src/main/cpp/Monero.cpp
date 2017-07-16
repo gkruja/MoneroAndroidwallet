@@ -1,7 +1,6 @@
 #include "Monero.h"
 
 
-
 using namespace Monero;
 using namespace epee;
 using namespace cryptonote;

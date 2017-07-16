@@ -1,5 +1,6 @@
 package com.example.root.monerotest;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -85,6 +86,21 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 //        unbindService(this);
 //        mBound = false;
     }
+
+
+    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                View customActionBar = inflater.inflate(R.layout.ab_main, null);
+
+                setCustomActionBar(customActionBar);
+            }
+        }
+    };
 
     /**
      * Service Connection's required methods.
@@ -253,7 +269,15 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
     }
 
-     private Runnable  runnableUpdateBar = new  Runnable() {
+    @Override
+    public void restoreProgressBar() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customActionBar = inflater.inflate(R.layout.ab_main, null);
+
+        setCustomActionBar(customActionBar);
+    }
+
+    private Runnable  runnableUpdateBar = new  Runnable() {
 
          @Override
          public void run() {

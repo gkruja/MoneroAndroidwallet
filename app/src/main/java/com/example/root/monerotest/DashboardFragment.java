@@ -36,6 +36,7 @@ public class DashboardFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
                 setData();
+                setActionBar();
             }
         }
     };
@@ -58,6 +59,9 @@ public class DashboardFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+    }
+
+    private void setActionBar(){
         MainActivity activity = (MainActivity) getActivity();
 
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -15,14 +15,23 @@ import com.example.root.monerotest.R;
 
 public class SettingsFragment extends PreferenceFragment {
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preference);
+    }
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.settings_fragment, container, false);
-    }
+
+
+
+//
+//    @Nullable
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+//        return inflater.inflate(R.layout.settings_fragment, container, false);
+//    }
 }

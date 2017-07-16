@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Select node to connect"
+        android:key="category_select_node">
+
+
+        <EditTextPreference
+            android:key="edittext_key_address_to_connect"
+            android:title="Node Configiguration"
+            android:dialogTitle="Enter IP and Port"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="select network preference"
+        android:key="category_network_pref">
+
+        <ListPreference
+            android:key="network_list_key"
+            android:title="network_list_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Update wallet at night"
+        android:key="category_sync_at_night">
+
+        <SwitchPreference
+            android:title="switch pref title"
+            android:key="switch_sync_night"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
