@@ -14,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.example.root.monerotest.Services.SyncWalletService;
-
 public class DashboardFragment extends Fragment {
 
 
@@ -36,7 +33,7 @@ public class DashboardFragment extends Fragment {
         activity.setCustomActionBar(customActionBar);
     }
 
-    
+
 
 
     public void setData(){

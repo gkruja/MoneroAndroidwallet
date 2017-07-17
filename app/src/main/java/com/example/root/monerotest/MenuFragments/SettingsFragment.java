@@ -28,14 +28,14 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-        LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View customActionBar = inflater.inflate(R.layout.ab_main, null);
-        mainActivity.setCustomActionBar(customActionBar);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        MainActivity mainActivity = (MainActivity) getActivity();
+//        LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        View customActionBar = inflater.inflate(R.layout.ab_main, null);
+//        mainActivity.setCustomActionBar(customActionBar);
+//    }
 }

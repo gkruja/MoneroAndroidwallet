@@ -72,10 +72,7 @@ using namespace cryptonote;
             return false;
         }
 
-        if(recover_key != nullptr)
-        {
-            delete recover_key;
-        }
+
         return true;
 
     }

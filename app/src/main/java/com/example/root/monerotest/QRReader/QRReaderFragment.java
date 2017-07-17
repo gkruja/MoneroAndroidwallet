@@ -16,9 +16,8 @@ public class QRReaderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.qr_reader_fragment, container, false);
+
         //TODO: here you set up any listeners to the views in the layout
-
-
         return v;
     }
 
@@ -29,7 +28,6 @@ public class QRReaderFragment extends Fragment {
         if(getView() != null){
             View v = getView();
             //TODO: here you can call findViewWithId and get the view u need from the qr_reder_fragment layout
-
         }
     }
 }

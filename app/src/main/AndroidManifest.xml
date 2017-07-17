@@ -28,6 +28,9 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <activity android:name=".SettingActivity">
+        </activity>
+
         <service android:name=".Services.SyncWalletService"
             android:exported="false"/>
     </application>

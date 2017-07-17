@@ -10,7 +10,7 @@
         android:layout_height="@dimen/actionBarIconSize"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_menu_black_24dp"
-        android:background="@color/colorPrimary"/>
+        style="@style/ImageButtonStyle"/>
 
 
 
@@ -21,6 +21,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_qr_generate_24_24"
-        android:background="@color/colorPrimary"/>
+        style="@style/ImageButtonStyle"/>
 
 </RelativeLayout>

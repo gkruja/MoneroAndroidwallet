@@ -113,8 +113,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         unbindService(this);
     }
 
-
-
     public void resumeActionBar(){
         mIsSyncing = false;
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -158,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     /**
      * Init and setup most UI and listeners.
      */
+
     private void setNavigationDrawerLayoutListener(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
@@ -189,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                         SettingsFragment settingsFragment = SettingsFragment.newInstance();
                         setTitle(getString(R.string.nav_item_settings_title));
                         mCurrentFragmentID = R.id.item_settings;
+//                        Intent settings = new Intent(MainActivity.this, SettingActivity.class);
+//                        startActivity(settings);
                         getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
 

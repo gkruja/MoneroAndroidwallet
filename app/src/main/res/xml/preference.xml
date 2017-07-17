@@ -7,8 +7,12 @@
 
 
         <EditTextPreference
+
             android:key="edittext_key_address_to_connect"
             android:title="(IP:PORT ex: 127.0.0.1:8080)"
+            android:textColorHighlight="@color/gray_title_color"
+            android:shadowColor="@color/gray_title_color"
+            android:textColorLink="@color/gray_title_color"
             android:textColor="@color/gray_title_color"
             android:dialogTitle="Enter IP and Port"
             />
@@ -25,14 +29,15 @@
             android:entries="@array/networkPrefValue"/>
     </PreferenceCategory>
 
+
     <PreferenceCategory
+
         android:title="Sync wallet when sleep"
         android:key="category_sync_at_night">
 
         <SwitchPreference
             android:title="when charging and WIFI on"
             android:key="switch_sync_night"/>
-
     </PreferenceCategory>
 
 </PreferenceScreen>

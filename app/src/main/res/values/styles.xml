@@ -4,11 +4,19 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:listDivider">@color/menu_divider_line_color</item>
+        <item name="android:colorAccent">@color/menu_background_color</item>
     </style>
 
 
     <style name="QRGeneratorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/menu_background_color</item>
+        <item name="actionBarItemBackground">@color/menu_font_color</item>
+    </style>
+
+    <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/menu_font_color</item>
+        <item name="background">@color/menu_background_color</item>
+        <item name="android:backgroundTint">@color/menu_background_color</item>
     </style>
 
 </resources>

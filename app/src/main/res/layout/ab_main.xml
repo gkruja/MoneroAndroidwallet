@@ -7,7 +7,7 @@
 
     <ImageButton
         android:id="@+id/action_open_menu"
-        android:background="@color/colorPrimary"
+        style="@style/ImageButtonStyle"
         android:src="@drawable/ic_menu_black_24dp"
         android:layout_width="@dimen/actionBarIconSize"
         android:layout_alignParentLeft="true"
@@ -18,7 +18,7 @@
 
     <ImageButton
         android:id="@+id/action_sync_wallet"
-        android:background="@color/colorPrimary"
+        style="@style/ImageButtonStyle"
         android:src="@drawable/ic_sync_black_24dp"
         android:layout_width="@dimen/actionBarIconSize"
         android:layout_alignParentEnd="true"
