@@ -18,7 +18,7 @@ public class NotificationUtils {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(_context);
 
-        builder.setSmallIcon(R.drawable.ic_home_black_24dp);
+        builder.setSmallIcon(R.drawable.ic_notification_sync_32_32);
         builder.setContentTitle("Syncing Monero Wallet");
 
         builder.setWhen(System.currentTimeMillis());

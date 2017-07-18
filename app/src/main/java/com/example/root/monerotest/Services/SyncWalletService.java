@@ -2,21 +2,14 @@ package com.example.root.monerotest.Services;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-
-import com.example.root.monerotest.MainActivity;
-import com.example.root.monerotest.R;
 import com.example.root.monerotest.Utils.NotificationUtils;
-
-import java.io.File;
 
 
 public class SyncWalletService extends Service {
@@ -26,7 +19,6 @@ public class SyncWalletService extends Service {
     }
 
     public static final String ACTION_SYNC_DONE = "com.example.root.monerotest.SYNC_DONE";
-
     private Notification mNotification;
     private Callbacks mCallbacks;
     private Thread mThread;
@@ -37,6 +29,17 @@ public class SyncWalletService extends Service {
 
         initWallet();
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopForeground(true);
+        mNotification = null;
+        if(mThread != null)
+            mThread.interrupt();
+        mThread = null;
+        mCallbacks = null;
+    }
+
 
 
     public void initWallet(){
@@ -54,7 +57,6 @@ public class SyncWalletService extends Service {
                 stopSelf();
         }
     }
-
     public void checkHeight(){
 
         int walletHeight = 0;
@@ -69,7 +71,7 @@ public class SyncWalletService extends Service {
         if(mCallbacks == null)
             return;
 
-
+        //If wallet height is not up-to-date with node.
         if(walletHeight < daemonHeight){
             //Update progress bar
             mCallbacks.updateProgressBar(walletHeight, daemonHeight);
@@ -78,7 +80,6 @@ public class SyncWalletService extends Service {
             Toast.makeText(this, "wallet height not less than daemonHeight",Toast.LENGTH_SHORT).show();
         }
     }
-
     public void syncWalletToDaemon(){
         //Create a foreground service attach to a notification.
         mNotification = NotificationUtils.getSyncWalletNotification(getApplicationContext());
@@ -106,27 +107,14 @@ public class SyncWalletService extends Service {
         mThread = new Thread(runnable);
         mThread.start();
     }
+    public void registerClient(Activity activity){
+        mCallbacks = (Callbacks)activity;
+    }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return new SyncServiceBinder();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopForeground(true);
-        mNotification = null;
-        if(mThread != null)
-            mThread.interrupt();
-            mThread = null;
-            mCallbacks = null;
-    }
-
-
-    public void registerClient(Activity activity){
-        mCallbacks = (Callbacks)activity;
     }
 
     /**
@@ -136,12 +124,9 @@ public class SyncWalletService extends Service {
     public native int WalletHeight();
     public native int DaemonHeight();
     public native void WalletRefresh();
-
-
     /**
      * Interface to communicate Service-Client.
      */
-
     public interface Callbacks{
         void updateProgressBar(int current, int max);
     }

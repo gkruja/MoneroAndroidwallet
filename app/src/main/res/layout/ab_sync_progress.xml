@@ -24,11 +24,16 @@
         app:layout_constraintLeft_toRightOf="@+id/action_open_menu"
         android:layout_marginLeft="24dp"
         app:layout_constraintTop_toTopOf="@+id/action_open_menu"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/action_open_menu"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintRight_toRightOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <TextView

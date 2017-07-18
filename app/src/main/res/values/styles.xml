@@ -13,7 +13,20 @@
         <item name="actionBarItemBackground">@color/menu_font_color</item>
     </style>
 
+    <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@color/menu_font_color</item>
+        <item name="android:icon">@color/menu_font_color</item>
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+    </style>
+
     <style name="ImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/menu_font_color</item>
+        <item name="background">@color/menu_background_color</item>
+        <item name="android:backgroundTint">@color/menu_background_color</item>
+    </style>
+
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@android:color/primary_text_dark</item>
         <item name="android:tint">@color/menu_font_color</item>
         <item name="background">@color/menu_background_color</item>
         <item name="android:backgroundTint">@color/menu_background_color</item>

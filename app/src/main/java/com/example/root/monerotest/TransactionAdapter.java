@@ -93,7 +93,7 @@ public class TransactionAdapter extends ArrayAdapter {
             holder = new ViewHolder();
 
             holder.amountTextView = (TextView) convertView.findViewById(R.id.amount_value);
-            holder.feeTextView = (TextView) convertView.findViewById(R.id.fee_value);
+            //holder.feeTextView = (TextView) convertView.findViewById(R.id.fee_value);
             holder.dateTextView = (TextView) convertView.findViewById(R.id.date);
             holder.timeTextView = (TextView) convertView.findViewById(R.id.time);
 
@@ -111,15 +111,15 @@ public class TransactionAdapter extends ArrayAdapter {
         if(transaction.getFee().equals("0.00000"))
         {
             holder.amountTextView.setTextColor(Color.rgb(54,176,91));
-            holder.feeTextView.setTextColor(Color.rgb(54,176,91));
+            //holder.feeTextView.setTextColor(Color.rgb(54,176,91));
         }else{
             holder.amountTextView.setTextColor(Color.rgb(255,79,65));
-            holder.feeTextView.setTextColor(Color.rgb(255,79,65));
+           // holder.feeTextView.setTextColor(Color.rgb(255,79,65));
 
         }
 
        holder.amountTextView.setText(transaction.getAmount());
-        holder.feeTextView.setText(transaction.getFee());
+        //holder.feeTextView.setText(transaction.getFee());
         holder.dateTextView.setText(transaction.getDate());
         holder.timeTextView.setText(transaction.getTime());
 

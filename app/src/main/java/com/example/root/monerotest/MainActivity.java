@@ -52,18 +52,26 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private Handler mHandler;
     final ViewGroup nullParent = null;
 
+
     private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
                 resumeActionBar();
-
+                if(findViewById(R.id.daemon_status_textedit) != null){
+                    findViewById(R.id.daemon_status_textedit).setVisibility(View.VISIBLE);
+                }
                 switch (mCurrentFragmentID){
                     case R.id.item_dashboard:
                         DashboardFragment fragment = (DashboardFragment) getFragmentManager().
                                                         findFragmentById(R.id.main_content);
-                        if(fragment != null)
+                        if(fragment != null && fragment.getView() != null){
+                            fragment.getView().findViewById(R.id.listview_card).setVisibility(View.VISIBLE);
                             fragment.setData();
+                        }
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -188,9 +196,10 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                         SettingsFragment settingsFragment = SettingsFragment.newInstance();
                         setTitle(getString(R.string.nav_item_settings_title));
                         mCurrentFragmentID = R.id.item_settings;
-//                        Intent settings = new Intent(MainActivity.this, SettingActivity.class);
-//                        startActivity(settings);
-                        getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
+                        Intent settings = new Intent(MainActivity.this, SettingActivity.class);
+                        settings.putExtra(SettingActivity.EXTRA_STATE, 1);
+                        startActivity(settings);
+                        //getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
 
                     case R.id.item_receive:
