@@ -104,8 +104,6 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
 {
     std::multimap<uint64_t, std::pair<bool,std::string>> transfer  = wallet2.get_transfers();
 
-
-
     int count =0 ;
     string temp = "[";
     jstring str;
@@ -123,19 +121,13 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
         string address = i->second.second;
         uint64_t height =  i->first;
 
-
-
         temp += address +",";
 
         str = env->NewStringUTF(temp.c_str());
 
         env->SetObjectArrayElement(payment,count,str);
         count++;
-
-
-
     }
-
 
     int i = temp.find_last_of(",");
     temp = temp.substr(0,i)+"]";
@@ -147,9 +139,7 @@ Java_com_example_root_monerotest_DashboardFragment_Balance(
         JNIEnv *env,
         jobject /* this */)
 {
-    double balance = wallet2.Balance();
-
-    return balance;
+    return  wallet2.Balance();
 }
 
 extern "C"
@@ -158,18 +148,17 @@ Java_com_example_root_monerotest_DashboardFragment_UnlockedBalance(
         JNIEnv *env,
         jobject /* this */)
 {
-    double unlockedbalance = wallet2.UnlockedBalance();
-    return unlockedbalance;
+    return wallet2.UnlockedBalance();
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_MenuFragments_SendFragment_SendTransfer(
-        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount,jint Mixin) {
+        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount) {
 
     string address = env->GetStringUTFChars(Address,0);
 
-    wallet2.transfer(address,Amount *1000000000000,"",4,0);
+    wallet2.transfer(address,Amount *1000000000000,"",0);
 
     return env->NewStringUTF(wallet2.pending_tx.c_str());
 }

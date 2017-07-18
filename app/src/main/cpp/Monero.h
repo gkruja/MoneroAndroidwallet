@@ -60,8 +60,7 @@ public:
 
     bool Check_Connection();
 
-    void
-    transfer(string address, uint64_t ammount, string paymentId, uint32_t mixin, uint32_t priority);
+    void transfer(string address, uint64_t ammount, string paymentId, uint32_t priority);
 
     bool init(string DaemonAddress, string Password, string WalletName, bool testnet, int loglevel);
 
@@ -69,21 +68,11 @@ public:
     std::multimap<uint64_t, std::pair<bool,std::string>> get_transfers();
 
     double Balance() {
-        uint64_t bal =  wallet2->balance();
-
-        double final = (bal / (double) 1000000000000);
-
-        return final;
-    }
+        return (wallet2->balance() / (double) 1000000000000); }
 
     double UnlockedBalance() {
+        return (wallet2->unlocked_balance() / (double) 1000000000000); }
 
-        uint64_t ubal =  wallet2->unlocked_balance();
-
-        double final = (ubal / (double) 1000000000000);
-
-        return final;
-    }
     uint64_t WalletLocalHeight(){
         local_height = wallet2->get_blockchain_current_height();
         return local_height;
@@ -123,20 +112,13 @@ public:
     }
 
     string get_payment_id(){
-        crypto::hash8 payment_id;
-        payment_id = crypto::rand<crypto::hash8>();
-    string temp = epee::string_tools::pod_to_hex(payment_id);
-
-
-        return temp;
-
+        return  epee::string_tools::pod_to_hex(crypto::rand<crypto::hash8>());
     }
 
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;
     tools::wallet2 *wallet2 = nullptr;
-
 
 };
 };

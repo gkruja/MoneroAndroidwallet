@@ -52,9 +52,7 @@ using namespace cryptonote;
 //
 //        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
 //        delete  wallet;
-        remove("/sdcard/monerolog");
-        mlog_configure("/sdcard/monerolog", false);
-        mlog_set_log_level(4);
+
         bool keys_file;
         bool wallet_file;
         tools::wallet2::wallet_exists(path+"/monero/"+Name,keys_file,wallet_file);
@@ -64,14 +62,13 @@ using namespace cryptonote;
         {
             return false;
         }
-        crypto::secret_key secretKey , recover_key;
+        crypto::secret_key secretKey ;
         try {
-           recover_key = wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
+             wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
         }catch (const std::exception &e){
             LOG_ERROR("wallet Error creating:" << e.what());
             return false;
         }
-
 
         return true;
 
@@ -142,8 +139,9 @@ static std::string get_human_readable_time(uint64_t ts)
                 std::string note = wallet2->get_tx_note(pd.m_tx_hash);
                 string temp = "" ;
                 temp = "{\"type\":\"in\" ,\"amount\": " +print_money(pd.m_amount)+","+
-                        "\"TX:\": \""+ string_tools::pod_to_hex(pd.m_tx_hash)+"\" ,"+
-                        "\"Payment_id:\": \""+ payment_id+"\" ,"+
+                        "\"blockheight\": "+ std::to_string(pd.m_block_height)+" ,"+
+                        "\"TX\": \""+ string_tools::pod_to_hex(pd.m_tx_hash)+"\" ,"+
+                        "\"Payment_id\": \""+ payment_id+"\" ,"+
                         "\"fee\":"+ "0.0 ,"+
                         "\"time\": \""+ get_human_readable_time(pd.m_timestamp)+"\","+
                         "\"date\": \""+get_human_readable_date(pd.m_timestamp)+"\"}";
@@ -175,8 +173,9 @@ static std::string get_human_readable_time(uint64_t ts)
                 std::string note = wallet2->get_tx_note(i->first);
                 string temp  ="" ;
                 temp = "{\"type\":\"out\" ,\"amount\": " +print_money(pd.m_amount_in - change - fee)+","+
-                       "\"TX:\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"+
-                        "\"Payment_id:\": \""+ payment_id+"\" ,"+
+                        "\"blockheight\": "+ std::to_string(pd.m_block_height)+" ,"+
+                       "\"TX\": \""+ string_tools::pod_to_hex(i->first)+"\" ,"+
+                        "\"Payment_id\": \""+ payment_id+"\" ,"+
                         "\"fee\":"+ print_money(fee)+","+
                         "\"time\": \""+ get_human_readable_time(pd.m_timestamp)+"\","+
                        "\"date\": \""+get_human_readable_date(pd.m_timestamp)+"\"}";
@@ -191,18 +190,16 @@ static std::string get_human_readable_time(uint64_t ts)
 
     }
 
-    void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId, uint32_t mixin,
-                  uint32_t priority) {
+    void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId, uint32_t priority) {
 
         priority = 4;
         int transfer_type = TransferNew;
 
-        size_t fake_outs_count = mixin;
+        size_t fake_outs_count = 9;
 
         if (fake_outs_count == 0) {
             fake_outs_count = 4;
         }
-
 
         std::vector<uint8_t> extra;
         bool payment_id_seen = false;
@@ -388,8 +385,7 @@ static std::string get_human_readable_time(uint64_t ts)
                     // if no exception, remove element from vector
                     ptx_vector.pop_back();
 
-                    pending_tx = cryptonote::short_hash_str(
-                            cryptonote::get_transaction_hash(ptx.tx));
+                    pending_tx = cryptonote::short_hash_str(cryptonote::get_transaction_hash(ptx.tx));
 
                     wallet2->store_tx_info();
 
@@ -480,7 +476,6 @@ static std::string get_human_readable_time(uint64_t ts)
             string ret = "unknown error";
 
         }
-
 
     }
 

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 public class DashboardFragment extends Fragment {
@@ -64,10 +65,12 @@ public class DashboardFragment extends Fragment {
 
                 ListView Histroy = (ListView) view.findViewById(R.id.listView1);
 
-                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
+                final TransactionAdapter adapter = new TransactionAdapter(getActivity(),
                         R.layout.item_transaction, transfers);
 
                 Histroy.setAdapter(adapter);
+
+
             }
         }
     }
@@ -79,6 +82,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dashboard_fragment, container, false);
+
     }
 
     public native boolean CheckConnection();

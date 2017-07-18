@@ -1,15 +1,19 @@
 package com.example.root.monerotest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.root.monerotest.QRReader.QRReaderActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,13 +53,16 @@ public class TransactionAdapter extends ArrayAdapter {
                 String amount = String.format("%9f",temp.getDouble("amount"));
                 String fee = String.format("%.5f",temp.getDouble("fee"));
                 String type = temp.getString("type");
+                String paymentID = temp.getString("Payment_id");
+                int BlockHeight = temp.getInt("blockheight");
+                    String TXID = temp.getString("TX");
                 Transaction insert;
 
              if(type.equals("in") ) {
 
-                insert  = new Transaction(true, amount, fee, temp.getString("date"),temp.getString("time"));
+                insert  = new Transaction(true, amount, fee, temp.getString("date"),temp.getString("time"),BlockHeight,TXID,paymentID);
             }else {
-                 insert = new Transaction(false, amount, fee, temp.getString("date"), temp.getString("time"));
+                 insert = new Transaction(false, amount, fee, temp.getString("date"), temp.getString("time"),BlockHeight,TXID,paymentID);
             }
             mData.add(insert);
         }
@@ -83,7 +90,7 @@ public class TransactionAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null) {
 
@@ -98,6 +105,26 @@ public class TransactionAdapter extends ArrayAdapter {
             holder.timeTextView = (TextView) convertView.findViewById(R.id.time);
 
             convertView.setTag(holder);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("TX info");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    builder.setMessage("TX ID: "+holder.mTX+
+                            "\nPayment ID: "+holder.mPaymentID+
+                            "\nBlockHeight: "+holder.mBlockHeight+
+                            "\nAmount: "+holder.mAmount+
+                            "\nFee: "+holder.mFee);
+                    AlertDialog alert1 = builder.create();
+                    alert1.show();
+                }
+            });
         }
         else {
 
@@ -127,8 +154,9 @@ public class TransactionAdapter extends ArrayAdapter {
         holder.mFee = transaction.getFee();
         holder.mDateString = transaction.getDate();
         holder.mTimeString = transaction.getTime();
-
-
+        holder.mTX = transaction.getTXid();
+        holder.mBlockHeight = String.valueOf(transaction.getBlockheight());
+        holder.mPaymentID = transaction.getpaymentID();
         return convertView;
     }
 
@@ -137,6 +165,9 @@ public class TransactionAdapter extends ArrayAdapter {
         public TextView feeTextView;
         public TextView dateTextView;
         public TextView timeTextView;
+        public String mTX;
+        public String mPaymentID;
+        public String mBlockHeight;
         public String mAmount;
         public String mFee;
         public String mDateString;
