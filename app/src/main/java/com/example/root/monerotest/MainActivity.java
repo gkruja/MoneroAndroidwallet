@@ -282,6 +282,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 public void onClick(View v) {
                     //TODO: handle sending action.
 
+
+
                 }
             });
 
@@ -371,4 +373,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      * which is packaged with this application.
      */
     public native int WalletHeight();
+    public native String SendTransfer(String Address, double Amount);
+
 }
