@@ -188,7 +188,8 @@ static std::string get_human_readable_time(uint64_t ts)
 
     void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId, uint32_t priority) {
 
-        priority = 4;
+
+        priority = 1;
         int transfer_type = TransferNew;
 
         size_t fake_outs_count = 9;

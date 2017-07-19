@@ -121,6 +121,35 @@ public:
             return false;
     }
 
+    bool check_address(string address){
+        cryptonote::account_public_address account_public_address;
+
+       bool check = cryptonote::get_account_address_from_str(account_public_address,wallet2->testnet(),address);
+
+        return check;
+    }
+
+    bool check_payment_id(string payment_id_str)
+    {
+        crypto::hash payment_id;
+
+        bool r = tools::wallet2::parse_long_payment_id(payment_id_str, payment_id);
+        if (r) {
+            return true;
+
+        } else {
+            crypto::hash8 payment_id8;
+            r = tools::wallet2::parse_short_payment_id(payment_id_str, payment_id8);
+            if (r) {
+                return true;
+            }
+        }
+        if (!r) {
+
+            return false;
+        }
+    }
+
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;
