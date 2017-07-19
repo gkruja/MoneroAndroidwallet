@@ -1,13 +1,7 @@
-//
-// Created by gkruj on 6/18/2017.
-//
 
 #ifndef MONEROTEST_MONERO_H
 
 #define MONEROTEST_MONERO_H
-//
-// Created by gkruj on 6/18/2017.
-//
 
 #include <jni.h>
 #include <string>

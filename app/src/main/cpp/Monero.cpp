@@ -189,7 +189,7 @@ static std::string get_human_readable_time(uint64_t ts)
     void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId, uint32_t priority) {
 
 
-        priority = 1;
+
         int transfer_type = TransferNew;
 
         size_t fake_outs_count = 9;
@@ -394,9 +394,11 @@ static std::string get_human_readable_time(uint64_t ts)
         }
         catch (const tools::error::no_connection_to_daemon &) {
             //   fail_msg_writer() << tr("no connection to daemon. Please make sure daemon is running.");
+            string ret = "unknown error";
+
         }
         catch (const tools::error::wallet_rpc_error &e) {
-            LOG_ERROR("RPC error: " << e.to_string());
+            //LOG_ERROR("RPC error: " << e.to_string());
             //      fail_msg_writer() << tr("RPC error: ") << e.what();
             string ret = "unknown error";
         }
@@ -432,6 +434,8 @@ static std::string get_human_readable_time(uint64_t ts)
         }
         catch (const tools::error::tx_not_constructed &) {
             //   fail_msg_writer() << tr("transaction was not constructed");
+            string ret = "unknown error";
+
         }
         catch (const tools::error::tx_rejected &e) {
             //    fail_msg_writer() << (boost::format(tr("transaction %s was rejected by daemon with status: ")) % get_transaction_hash(e.tx())) << e.status();
@@ -453,22 +457,22 @@ static std::string get_human_readable_time(uint64_t ts)
             string ret = "unknown error";
         }
         catch (const tools::error::transfer_error &e) {
-            LOG_ERROR("unknown transfer error: " << e.to_string());
+           // LOG_ERROR("unknown transfer error: " << e.to_string());
             //   fail_msg_writer() << tr("unknown transfer error: ") << e.what();
             string ret = "unknown error";
         }
         catch (const tools::error::wallet_internal_error &e) {
-            LOG_ERROR("internal error: " << e.to_string());
+          //  LOG_ERROR("internal error: " << e.to_string());
             //  fail_msg_writer() << tr("internal error: ") << e.what();
             string ret = "unknown error";
         }
         catch (const std::exception &e) {
-            LOG_ERROR("unexpected error: " << e.what());
+           // LOG_ERROR("unexpected error: " << e.what());
             //  fail_msg_writer() << tr("unexpected error: ") << e.what();
             string ret = "unknown error";
         }
         catch (...) {
-            LOG_ERROR("unknown error");
+          //  LOG_ERROR("unknown error");
             //fail_msg_writer() << tr("unknown error");
             string ret = "unknown error";
 

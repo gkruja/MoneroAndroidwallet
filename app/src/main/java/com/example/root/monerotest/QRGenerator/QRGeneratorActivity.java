@@ -44,17 +44,14 @@ public class QRGeneratorActivity extends AppCompatActivity{
         setContentView(R.layout.qr_generator_activity);
 
 
-
         if(getSupportActionBar() != null){
             //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
             getSupportActionBar().setTitle(R.string.qr_bitmap);
-            getSupportActionBar().setIcon(getDrawable(R.drawable.ic_notification_sync_32_32));
         }
 
-        getFragmentManager().beginTransaction().
-                replace(R.id.fragment_container,
-                        QRGeneratorFragment.newInstance(),
-                        QRGeneratorFragment.TAG)
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            QRGeneratorFragment.newInstance(),
+                            QRGeneratorFragment.TAG)
                 .commit();
     }
 

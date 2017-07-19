@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                         SendFragment fragmentSend = SendFragment.newInstance();
                         setTitle(getString(R.string.nav_item_send_title));
                         mCurrentFragmentID = R.id.item_send;
-                        getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentSend).commit();
+                        getFragmentManager().beginTransaction().replace(R.id.main_content, fragmentSend, SendFragment.TAG).commit();
 
                         break;
                     case R.id.item_sign:
@@ -292,10 +292,25 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
             actionSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: handle sending action.
+//                    if(getFragmentManager().findFragmentByTag(SendFragment.TAG) != null){
+//                        SendFragment sendFragment = (SendFragment) getFragmentManager().
+//                                                    findFragmentByTag(SendFragment.TAG);
+//
+//                        if(sendFragment.areFieldsValid()){
+//                            String amount = sendFragment.getAmount();
+//                            String address = sendFragment.getAddress();
+//                            String paymentID = sendFragment.getPaymentID();
+//
+//                            //TODO: call native to send transaction.
+//                            SendTransfer(address, Double.parseDouble(amount));
+//                            Toast.makeText(MainActivity.this , "Transaction send!", Toast.LENGTH_SHORT).show();
+//                        }else{
+//                            Toast.makeText(MainActivity.this , "fields not valid", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
 
-
-
+                   String test = SendTransfer("9tqUiEtn3FTi2j6YD9b3QR7oMSHvyrUQyT4CVn8d4SRzCKSpDrzWDFn1KWWW7e7VjT73Cf4pj1JhgdaGriCx7mM1Q1oe9Fu", Double.parseDouble("3.1416"));
+                    Toast.makeText(MainActivity.this , "Transaction send!", Toast.LENGTH_SHORT).show();
                 }
             });
 
