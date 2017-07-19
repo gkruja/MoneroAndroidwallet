@@ -96,6 +96,14 @@ Java_com_example_root_monerotest_DashboardFragment_CheckConnection(
     return wallet2.Check_Connection();
 }
 
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_DashboardFragment_WalletAvailable(
+        JNIEnv *env,
+        jobject /* this */)
+{
+    return !wallet2.isnull();
+}
 
 extern "C"
 JNIEXPORT jstring JNICALL
