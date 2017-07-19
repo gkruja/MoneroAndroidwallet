@@ -19,6 +19,7 @@ Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet(
    if (std::ifstream(path+"/monero/example.keys")) {
 
        //159.203.250.205:38081
+       //192.168.1.141:28081
         init = wallet2.init("192.168.1.141:28081", "password", path+"/monero/example", true, 4);
    } else
    {

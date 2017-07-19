@@ -9,12 +9,17 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DashboardFragment extends Fragment {
 
 
@@ -22,7 +27,29 @@ public class DashboardFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setActionBar();
+        //reloadTransactions();
     }
+
+
+    public void reloadTransactions(){
+
+        //TODO: native call for check if wallet2 is not null (is available)
+
+        
+        try {
+            JSONObject localData = new JSONObject(Transfers());
+            if(localData.length() > 0 && getView() != null){
+                ListView history = (ListView) getView().findViewById(R.id.listView1);
+                TransactionAdapter adapter = new TransactionAdapter(getActivity(),
+                        R.layout.item_transaction, localData.toString());
+
+                history.setAdapter(adapter);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void setActionBar(){
         MainActivity activity = (MainActivity) getActivity();
@@ -33,10 +60,6 @@ public class DashboardFragment extends Fragment {
 
         activity.setCustomActionBar(customActionBar);
     }
-
-
-
-
     public void setData(){
         View view  = getView();
 
@@ -74,6 +97,7 @@ public class DashboardFragment extends Fragment {
             }
         }
     }
+
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
