@@ -3,6 +3,8 @@ package com.example.root.monerotest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +73,10 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.setting_menu, menu);
+        // change color for icon 0
+        Drawable yourdrawable = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+        yourdrawable.mutate();
+        yourdrawable.setColorFilter(getResources().getColor(R.color.menu_font_color), PorterDuff.Mode.SRC_IN);
         return super.onCreateOptionsMenu(menu);
     }
 }

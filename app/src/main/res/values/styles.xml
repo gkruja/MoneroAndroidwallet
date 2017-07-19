@@ -8,12 +8,12 @@
     </style>
 
 
-    <style name="QRGeneratorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="QRGeneratorTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/menu_background_color</item>
         <item name="actionBarItemBackground">@color/menu_font_color</item>
     </style>
 
-    <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SettingsTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="actionBarItemBackground">@color/menu_font_color</item>
         <item name="android:icon">@color/menu_font_color</item>
         <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>

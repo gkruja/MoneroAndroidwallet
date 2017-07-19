@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     final ViewGroup nullParent = null;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

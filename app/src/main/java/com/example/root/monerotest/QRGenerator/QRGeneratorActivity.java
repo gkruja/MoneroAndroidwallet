@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -43,8 +46,9 @@ public class QRGeneratorActivity extends AppCompatActivity{
 
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
+            //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary)));
             getSupportActionBar().setTitle(R.string.qr_bitmap);
+            getSupportActionBar().setIcon(getDrawable(R.drawable.ic_notification_sync_32_32));
         }
 
         getFragmentManager().beginTransaction().
@@ -186,6 +190,11 @@ public class QRGeneratorActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.qr_generator_menu, menu);
+
+        // change color for icon 0
+        Drawable yourdrawable = menu.getItem(0).getIcon(); // change 0 with 1,2 ...
+        yourdrawable.mutate();
+        yourdrawable.setColorFilter(getResources().getColor(R.color.menu_font_color), PorterDuff.Mode.SRC_IN);
         return true;
     }
 }
