@@ -40,6 +40,7 @@ public class DashboardFragment extends Fragment {
                 TransactionAdapter adapter = new TransactionAdapter(getActivity(),
                         R.layout.item_transaction, localData.toString());
 
+                history.setAdapter(null);
                 history.setAdapter(adapter);
                 getView().findViewById(R.id.listview_card).setVisibility(View.VISIBLE);
             }
