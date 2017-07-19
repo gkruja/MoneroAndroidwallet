@@ -1,5 +1,7 @@
 package com.example.root.monerotest;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -109,7 +111,16 @@ public class TransactionAdapter extends ArrayAdapter {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("TX info");
+                    builder.setTitle("Transaction details");
+
+                    builder.setNegativeButton("Copy TX ID", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(getContext().CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("TX",holder.mTX);
+                            clipboardManager.setPrimaryClip(clip);
+                        }
+                    });
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override

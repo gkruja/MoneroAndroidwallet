@@ -29,7 +29,7 @@ public class SendFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view  = getView();
 
-        Toast.makeText(getActivity(),"Somefeild not filled",Toast.LENGTH_LONG).show();
+
 
 //        Button Send = (Button) view.findViewById(R.id.button);
 //

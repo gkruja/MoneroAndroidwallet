@@ -162,7 +162,17 @@ Java_com_example_root_monerotest_MenuFragments_SendFragment_SendTransfer(
 
     return env->NewStringUTF(wallet2.pending_tx.c_str());
 }
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MainActivity_SendTransfer(
+        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount) {
 
+    string address = env->GetStringUTFChars(Address,0);
+
+    wallet2.transfer(address,Amount *1000000000000,"",0);
+
+    return env->NewStringUTF(wallet2.pending_tx.c_str());
+}
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_QRGenerator_QRGeneratorFragment_GeneratePaymentId(

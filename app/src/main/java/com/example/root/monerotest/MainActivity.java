@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 @Override
                 public void onClick(View v) {
                     //TODO: handle sending action.
+
                 }
             });
 

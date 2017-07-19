@@ -6,10 +6,13 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.example.root.monerotest.Utils.NotificationUtils;
+
+import java.io.File;
 
 
 public class SyncWalletService extends Service {
@@ -44,10 +47,10 @@ public class SyncWalletService extends Service {
 
     public void initWallet(){
         String extStore = System.getenv("EXTERNAL_STORAGE");
-        //File externalStorage = Environment.getExternalStorageDirectory();
+        File externalStorage = Environment.getExternalStorageDirectory();
 
         //Load wallet fmor external storage
-        boolean success = InitWallet(extStore);
+        boolean success = InitWallet(externalStorage.getPath());
 
 
         if(success){

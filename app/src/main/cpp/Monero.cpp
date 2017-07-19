@@ -12,46 +12,42 @@ using namespace cryptonote;
             remove("/sdcard/monerolog");
             mlog_configure("/sdcard/monerolog", false);
             mlog_set_log_level(loglevel);
-
         }
 
-        if (wallet2 != nullptr)
-            return false;
-        std::string daemon;
-        daemon.clear();
-        boost::program_options::options_description *desc_params;
         // public testnet 159.203.250.205:38081
        // daemon.append(DaemonAddress);
+        if (wallet2 == nullptr)
+        {
+            wallet2 = new tools::wallet2(true);
+            wallet2->load( WalletName, "password");
+        }
 
-        wallet2 = new tools::wallet2(true);
-
-        wallet2->load( WalletName, "password");
         bool init = wallet2->init(std::move(DaemonAddress));
 
         uint32_t version =0 ;
         bool connect = wallet2->check_connection(&version);
 
-
         if (connect) {
             return true;
-
         } else{
             return false;
         }
-
 
     }
 
     bool AndroidWallet::GenerateWallet(string path,string Name,string Password) {
 
-//        boost::filesystem::path dir(path+"/monero");
-//        boost::filesystem::create_directories(dir);
+        boost::filesystem::path dir(path+"/monero");
+        boost::filesystem::create_directories(dir);
 //        Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
 //        Monero::WalletManager *walletManager = test->getWalletManager();
 //
 //
 //        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
 //        delete  wallet;
+        remove("/sdcard/monerolog");
+        mlog_configure("/sdcard/monerolog", false);
+        mlog_set_log_level(4);
 
         bool keys_file;
         bool wallet_file;
@@ -62,9 +58,9 @@ using namespace cryptonote;
         {
             return false;
         }
-        crypto::secret_key secretKey ;
+        crypto::secret_key secretKey, recover_key ;
         try {
-             wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
+         recover_key  =    wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
         }catch (const std::exception &e){
             LOG_ERROR("wallet Error creating:" << e.what());
             return false;
