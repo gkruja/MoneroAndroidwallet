@@ -114,6 +114,12 @@ public:
     string get_payment_id(){
         return  epee::string_tools::pod_to_hex(crypto::rand<crypto::hash8>());
     }
+    bool isnull(){
+        if(wallet2 == nullptr)
+            return true;
+        else
+            return false;
+    }
 
 private:
     uint64_t local_height = 0;

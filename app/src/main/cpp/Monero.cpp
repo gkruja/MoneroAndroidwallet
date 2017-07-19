@@ -475,6 +475,7 @@ static std::string get_human_readable_time(uint64_t ts)
 
     }
 
+
     AndroidWallet::AndroidWallet() {
     delete wallet2;
     wallet2 = nullptr;

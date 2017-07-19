@@ -103,8 +103,11 @@ Java_com_example_root_monerotest_DashboardFragment_Transfers(
         JNIEnv *env,
         jobject /* this */)
 {
-    if(wallet2 == nullptr)
-        return env->NewStringUTF("[]");
+    if(wallet2.isnull())
+    {
+        string ret ="[]";
+        return env->NewStringUTF(ret.c_str());
+    }
 
     std::multimap<uint64_t, std::pair<bool,std::string>> transfer  = wallet2.get_transfers();
 
