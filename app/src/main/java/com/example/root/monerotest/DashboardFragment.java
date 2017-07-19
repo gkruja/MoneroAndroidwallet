@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,23 +28,20 @@ public class DashboardFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setActionBar();
-        //reloadTransactions();
+        setData();
     }
 
 
     public void reloadTransactions(){
-
-        //TODO: native call for check if wallet2 is not null (is available)
-
-        
         try {
-            JSONObject localData = new JSONObject(Transfers());
+            JSONArray localData = new JSONArray(Transfers());
             if(localData.length() > 0 && getView() != null){
                 ListView history = (ListView) getView().findViewById(R.id.listView1);
                 TransactionAdapter adapter = new TransactionAdapter(getActivity(),
                         R.layout.item_transaction, localData.toString());
 
                 history.setAdapter(adapter);
+                getView().findViewById(R.id.listview_card).setVisibility(View.VISIBLE);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -60,41 +58,21 @@ public class DashboardFragment extends Fragment {
 
         activity.setCustomActionBar(customActionBar);
     }
+
     public void setData(){
         View view  = getView();
+        boolean walletAvailable = WalletAvailable();
+        if(view != null && walletAvailable){
 
-        if(view != null){
             //TextView connected = (TextView) view.findViewById(R.id.textView7);
-
             TextView Balance = (TextView) view.findViewById(R.id.textView11);
             TextView unLockedBalance = (TextView) view.findViewById(R.id.textView10);
 
 
-            boolean con = CheckConnection();
-            if(!con)
-            {
-                //connected.setText("DISCONNECTED!!!");
-                //connected.setTextColor(Color.RED);
-            }
-            else {
-                Balance.setText(String.format("%.3f",Balance())+"\tXMR");
-                unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
+            Balance.setText(String.format("%.3f",Balance())+"\tXMR");
+            unLockedBalance.setText(String.format("%.3f",UnlockedBalance())+"\tXMR");
 
-                String transfers = Transfers();
-
-                if(transfers.equals("[]")){
-                    return;
-                }
-
-                ListView Histroy = (ListView) view.findViewById(R.id.listView1);
-
-                final TransactionAdapter adapter = new TransactionAdapter(getActivity(),
-                        R.layout.item_transaction, transfers);
-
-                Histroy.setAdapter(adapter);
-
-
-            }
+            reloadTransactions();
         }
     }
 
@@ -113,4 +91,5 @@ public class DashboardFragment extends Fragment {
     public native double Balance();
     public native double UnlockedBalance();
     public native String Transfers();
+    public native boolean WalletAvailable();
 }

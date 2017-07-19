@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -32,6 +33,8 @@ import com.example.root.monerotest.QRGenerator.QRGeneratorActivity;
 import com.example.root.monerotest.QRReader.QRReaderActivity;
 import com.example.root.monerotest.Services.SyncWalletService;
 
+import java.io.File;
+
 
 public class MainActivity extends AppCompatActivity implements ServiceConnection, SyncWalletService.Callbacks {
 
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         System.loadLibrary("native-lib");
     }
 
+    public static final String FOLDER_NAME = "monero";
+    private String WALLET_PATH;
     private boolean mBound;
     private int mMaxSyncValue;
     private SyncWalletService mService;
@@ -53,30 +58,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     final ViewGroup nullParent = null;
 
 
-    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
-                resumeActionBar();
-                if(findViewById(R.id.daemon_status_textedit) != null){
-                    findViewById(R.id.daemon_status_textedit).setVisibility(View.VISIBLE);
-                }
-                switch (mCurrentFragmentID){
-                    case R.id.item_dashboard:
-                        DashboardFragment fragment = (DashboardFragment) getFragmentManager().
-                                                        findFragmentById(R.id.main_content);
-                        if(fragment != null && fragment.getView() != null){
-                            fragment.getView().findViewById(R.id.listview_card).setVisibility(View.VISIBLE);
-                            fragment.setData();
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        //check file storage for a file with .keys extension and return true or false;
+        if(checkWalletFileAvailable()){
+            //Initialize wallet.
+            InitWallet(WALLET_PATH);
+        }
 
         mIsSyncing = false;
         mHandler = new Handler();
@@ -119,6 +106,32 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         super.onStop();
         unregisterReceiver(mBroadcast);
         unbindService(this);
+    }
+
+    private boolean checkWalletFileAvailable(){
+        File externalStorage = Environment.getExternalStorageDirectory();
+        if(externalStorage == null)
+            return false;
+
+        File moneroDir = new File(externalStorage, FOLDER_NAME);
+
+        if(moneroDir.exists() && moneroDir.isDirectory()){
+
+            File[] fileList = moneroDir.listFiles();
+            if(fileList.length <= 0)
+                return false;
+
+            //loop and look for file .keys in that location.
+            for (File ff: fileList) {
+                if(ff.exists() && !ff.isDirectory() && ff.getPath().endsWith(".keys")){
+                    //there is a wallet. (the first one found)
+                    WALLET_PATH = ff.getAbsolutePath();
+                    return true;
+                }
+            }
+
+        }
+        return false;
     }
 
     public void resumeActionBar(){
@@ -366,6 +379,30 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      };
 
 
+    private BroadcastReceiver mBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SyncWalletService.ACTION_SYNC_DONE)){
+                resumeActionBar();
+                if(findViewById(R.id.daemon_status_textedit) != null){
+                    findViewById(R.id.daemon_status_textedit).setVisibility(View.VISIBLE);
+                }
+                switch (mCurrentFragmentID){
+                    case R.id.item_dashboard:
+                        DashboardFragment fragment = (DashboardFragment) getFragmentManager().
+                                findFragmentById(R.id.main_content);
+                        if(fragment != null && fragment.getView() != null){
+                            fragment.getView().findViewById(R.id.listview_card).setVisibility(View.VISIBLE);
+                            fragment.setData();
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
 
     /**
@@ -373,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      * which is packaged with this application.
      */
     public native int WalletHeight();
+    private native boolean InitWallet(String path);
     public native String SendTransfer(String Address, double Amount);
 
 }

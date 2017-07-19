@@ -30,7 +30,7 @@ public class SyncWalletService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        initWallet();
+        //initWallet();
     }
     @Override
     public void onDestroy() {
@@ -45,21 +45,21 @@ public class SyncWalletService extends Service {
 
 
 
-    public void initWallet(){
-        String extStore = System.getenv("EXTERNAL_STORAGE");
-        File externalStorage = Environment.getExternalStorageDirectory();
-
-        //Load wallet fmor external storage
-        boolean success = InitWallet(externalStorage.getPath());
-
-
-        if(success){
-            Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
-            //checkHeight();
-        }else{
-                stopSelf();
-        }
-    }
+//    public void initWallet(){
+//        String extStore = System.getenv("EXTERNAL_STORAGE");
+//        File externalStorage = Environment.getExternalStorageDirectory();
+//
+//        //Load wallet fmor external storage
+//        boolean success = InitWallet(externalStorage.getPath());
+//
+//
+//        if(success){
+//            Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
+//            //checkHeight();
+//        }else{
+//                stopSelf();
+//        }
+//    }
     public void checkHeight(){
 
         int walletHeight = 0;
@@ -123,7 +123,7 @@ public class SyncWalletService extends Service {
     /**
      * JNI CALLS
      */
-    public native boolean InitWallet(String path);
+    //public native boolean InitWallet(String path);
     public native int WalletHeight();
     public native int DaemonHeight();
     public native void WalletRefresh();
