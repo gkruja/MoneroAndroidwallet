@@ -471,9 +471,14 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
                 //TODO:logic.
 
-
+                String[] match = result.split(":");
+                String[] test = match[1].split("\\?");
+                String[] test2 = result.split("=");
+                String address = test[0];
+                String Paymentid = test2[1];
                 //TODO: pass the data to the setData in fragment.
 
+                fragment.setdata(address,Paymentid);
 
             }
         }
@@ -484,6 +489,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      * which is packaged with this application.
      */
     public native String GetDaemonAddress();
+    public native String ParseQR(String result);
     public native int WalletHeight();
     private native boolean ReInitWallet(String ipPort);
     private native boolean InitWallet(String path);

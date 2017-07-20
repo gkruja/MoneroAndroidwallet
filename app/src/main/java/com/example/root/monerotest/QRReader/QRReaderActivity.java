@@ -129,12 +129,6 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
        Pattern pattern = Pattern.compile("monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?$");
       //  Matcher matcher = pattern.matcher(MYresult);
         //int num = matcher.groupCount();
-        String address;
-        double ammount;
-        String paymentID;
-        String EXAMPLE_TEST =  MYresult;
-
-        String[] splitString = (EXAMPLE_TEST.split("/monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?/g"));
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

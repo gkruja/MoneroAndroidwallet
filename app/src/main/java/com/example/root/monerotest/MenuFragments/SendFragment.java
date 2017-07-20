@@ -150,12 +150,28 @@ public class SendFragment extends Fragment {
 
     }
     public void setdata(String Address, String PaymentID){
+        if(getView() == null)
+            return;
 
+        EditText editext_address = (EditText) getView().findViewById(R.id.addressValue);
+
+        editext_address.setText(Address);
+
+        EditText editext_payid = (EditText) getView().findViewById(R.id.paymentID_edittext);
+
+        editext_payid.setText(PaymentID);
     }
     public void setdata(String Address, double Amount){
 
     }
     public void setdata(String Address){
+
+        if(getView() == null)
+            return;
+
+        EditText editext_address = (EditText) getView().findViewById(R.id.addressValue);
+
+        editext_address.setText(Address);
 
     }
 }

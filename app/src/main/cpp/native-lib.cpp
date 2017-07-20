@@ -1,14 +1,41 @@
 #include <jni.h>
 #include <string>
 #include "Monero.h"
+#include "boost/optional/optional.hpp"
+#include "reg_exp_definer.h"
+#include <boost/regex/v4/regex_search.hpp>
 
-
+const static epee::global_regexp_critical_section gregexplock;
 
 
 Monero::AndroidWallet  wallet2;
 
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MainActivity_ParseQR(JNIEnv *env, jobject instance,
+                                                                   jstring Qrresult_) {
+    string Qrresult = env->GetStringUTFChars(Qrresult_, 0);
+
+    string regex = "monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?";
+    STATIC_REGEXP_EXPR_1(rexp_match_uri,  regex , boost::regex::icase | boost::regex::normal);
+
+    boost::smatch result;
+
+    boost::regex_search(Qrresult, result, rexp_match_uri, boost::match_default) ;
 
 
+    string zero = result[0];
+    string one = result[1];
+    string two = result[2];
+    string three = result[3];
+    string four = result[4];
+    string five = result[5];
+
+    return env->NewStringUTF(one.c_str());
+
+
+
+}
 
 
 
