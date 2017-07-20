@@ -6,6 +6,10 @@
 #include <jni.h>
 #include <string>
 #include <stdlib.h>
+#include <exception>
+#include <stdexcept>
+
+
 #include "cryptonote_basic/cryptonote_basic.h"
 
 #include "cryptonote_core/blockchain.h"
@@ -113,6 +117,7 @@ public:
             return true;
         else
             return false;
+
     }
 
     bool check_address(string address){
@@ -159,6 +164,13 @@ public:
             return wallet2->init(address);
         }
     }
+
+    string getDaemonaddress(){
+        if(wallet2 != nullptr)
+            return "";
+        return wallet2->get_daemon_address();
+    }
+
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;
