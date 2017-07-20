@@ -66,12 +66,17 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        //check file storage for a file with .keys extension and return true or false;
         if(checkWalletFileAvailable()){
-
             //Initialize wallet with default IP:PORT (Monero-World)
             InitWallet(WALLET_PATH);
+
+            //If custom ip:port is available, use it.
+            if(getIntent() != null && getIntent().hasExtra(SettingActivity.EXTRA_ADDRESS)){
+                //check file storage for a file with .keys extension and return true or false;
+                ReInitWallet(getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS));
+            }
         }
+
 
         mIsSyncing = false;
         mHandler = new Handler();
@@ -424,6 +429,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
      * which is packaged with this application.
      */
     public native int WalletHeight();
+    private native boolean ReInitWallet(String ipPort);
    // private native boolean InitWallet(String path, String address, String password);
     private native boolean InitWallet(String path);
     public native String SendTransfer(String Address, double Amount);

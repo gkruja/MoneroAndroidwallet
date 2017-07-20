@@ -90,7 +90,6 @@ public class SyncWalletService extends Service {
         mNotification = NotificationUtils.getSyncWalletNotification(getApplicationContext());
         startForeground(0x101, mNotification);
 
-
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

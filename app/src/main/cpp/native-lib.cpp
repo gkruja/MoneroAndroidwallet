@@ -52,6 +52,24 @@ Java_com_example_root_monerotest_SettingActivity_ReInitWallet(
 
     return init;
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_MainActivity_ReInitWallet(
+        JNIEnv *env,
+        jobject /* this */,jstring DaemonAddress)
+{
+    bool init =false ;
+
+    string daemon = env->GetStringUTFChars(DaemonAddress,0);
+
+        //159.203.250.205:38081
+        //192.168.1.141:28081
+        init = wallet2.reinit(daemon);
+
+
+    return init;
+}
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_MainActivity_InitWallet(

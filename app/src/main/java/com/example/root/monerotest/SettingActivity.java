@@ -19,44 +19,22 @@ public class SettingActivity extends AppCompatActivity {
     public static final String EXTRA_STATE = "EXTRA_STATE";
     public static final String EXTRA_ADDRESS = "EXTRA_ADDRESS";
 
-    public native void ReInitWallet(String address);
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = null;
         SharedPreferences pref = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
-
         // if state != 0 then IP:Host saved, use that to launch main activity.
         if(pref.getInt(EXTRA_STATE, 0) != 0){
              intent= new Intent(this, MainActivity.class);
         }
-
         if(getIntent() != null && getIntent().getIntExtra(EXTRA_STATE, 0) == 0){
-            //TODO: open settings normally.
             if(intent != null)
                 startActivity(intent);
         }
 
-
-
         setContentView(R.layout.setting_activity);
-
-        //Task for IP:PORT
-
-        //Validate input
-
-        //confirm save with action bar icon.
-
-        //Verify again input
-
-        //If ip:port valid, start main activity using IP:PORT. to start main activity.
-
-        //Ask for a valid node and port.
-
-
     }
 
     @Override
@@ -68,26 +46,31 @@ public class SettingActivity extends AppCompatActivity {
             if(fragment == null)
                 return false;
 
-            //TODO: validate ip:port.
-            if(!fragment.isNodeAddressValid()){
+            if(fragment.isNodeAddressValid()){
+
                 String ipPort = fragment.getIpPort();
+
+                //Notify to app that we have a ip:port from user.
+               SharedPreferences pref = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
+                SharedPreferences.Editor edit = pref.edit();
+                edit.putInt(EXTRA_STATE, 1);
+                edit.apply();
+
                 //Launch main activity since it wasn't opened by main acitvity itself.
                 if(getIntent() != null && getIntent().getIntExtra(EXTRA_STATE, 0) == 0){
 
-                    if(!ipPort.isEmpty()){
-
-                        ReInitWallet(ipPort);
+                        //Launch main activity for first time.
+                        Intent mainActivity = new Intent(this, MainActivity.class);
+                        mainActivity.putExtra(EXTRA_ADDRESS, ipPort);
+                        startActivity(mainActivity);
                         return true;
-                    }
 
                 }
 
-                //Close settings and show activity in the back stack. (previous one)
-                //String ipPort = fragment.getIpPort();
-                //pass the ipPort back to the mainActivity that was already opened.
-                Intent result = new Intent();
-                result.putExtra(EXTRA_ADDRESS, ipPort);
-                setResult(RESULT_OK, result);
+                //Activity was opened from the main Activity.
+
+                //We assume wallet2 is already loaded. since Settings was opened from MainActivity.
+                ReInitWallet(ipPort);
                 finish();
                 return true;
             }
@@ -95,6 +78,8 @@ public class SettingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private native boolean ReInitWallet(String ipPort);
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
