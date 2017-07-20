@@ -35,23 +35,25 @@ using namespace cryptonote;
 
     }
 
-    bool AndroidWallet::GenerateWallet(string path,string Name,string Password) {
+    bool AndroidWallet::GenerateWallet(string path,string Password) {
 
         boost::filesystem::path dir(path+"/monero");
         boost::filesystem::create_directories(dir);
+
 //        Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
 //        Monero::WalletManager *walletManager = test->getWalletManager();
 //
-//
 //        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
 //        delete  wallet;
+
+
         remove("/sdcard/monerolog");
         mlog_configure("/sdcard/monerolog", false);
         mlog_set_log_level(4);
 
         bool keys_file;
         bool wallet_file;
-        tools::wallet2::wallet_exists(path+"/monero/"+Name,keys_file,wallet_file);
+        tools::wallet2::wallet_exists(path,keys_file,wallet_file);
 
         wallet2 = new tools::wallet2(true, false);
         if(wallet_file || keys_file)
@@ -190,7 +192,7 @@ static std::string get_human_readable_time(uint64_t ts)
 
 
 
-        int transfer_type = TransferNew;
+        int transfer_type = TransferOriginal;
 
         size_t fake_outs_count = 9;
 
@@ -309,7 +311,8 @@ static std::string get_human_readable_time(uint64_t ts)
                 case TransferOriginal:
                     ptx_vector = wallet2->create_transactions(dsts, fake_outs_count,
                                                               0 /* unlock_time */, priority, extra,
-                                                              wallet2->testnet());
+                                                              true);
+
                     break;
             }
 
