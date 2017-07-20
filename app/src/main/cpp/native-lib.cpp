@@ -59,6 +59,28 @@ Java_com_example_root_monerotest_MainActivity_InitWallet(
 }
 
 extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_MainActivity_InitWallet(
+        JNIEnv *env,
+        jobject /* this */,jstring Path)
+{
+    bool init =false ;
+    string path = env->GetStringUTFChars(Path,0);
+    if (std::ifstream(path)) {
+        //159.203.250.205:38081
+        //192.168.1.141:28081
+        init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
+    } else
+    {
+        wallet2.GenerateWallet(path,"example","password");
+
+        init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
+    }
+
+    return init;
+}
+
+extern "C"
 JNIEXPORT jint JNICALL
 Java_com_example_root_monerotest_Services_SyncWalletService_WalletHeight(
         JNIEnv *env,
