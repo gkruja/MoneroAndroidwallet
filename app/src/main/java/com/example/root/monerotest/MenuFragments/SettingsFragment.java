@@ -18,6 +18,10 @@ import com.example.root.monerotest.R;
 
 public class SettingsFragment extends PreferenceFragment {
 
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,36 +30,33 @@ public class SettingsFragment extends PreferenceFragment {
 
     public boolean isNodeAddressValid(){
 
+        EditTextPreference editText = (EditTextPreference) findPreference("editTextAddress");
+
+        String text = editText.getText();
+
+        if(text.isEmpty())
+            return false;
+
+        if(!text.contains(":"))
+            return false;
+
+        //TODO: more validation. Unit testing plz.
 
 
-        return false;
+        return true;
     }
 
     public String getIpPort(){
 
         EditTextPreference editText = (EditTextPreference) findPreference("editTextAddress");
-
         String text = editText.getText();
 
-
-        text.isEmpty();
-
+        if(!text.isEmpty()){
+            String ip = text.substring(0, text.lastIndexOf(":"));
+            String port = text.substring(text.lastIndexOf(":")+1, text.length());
+            return ip +":"+port;
+        }
         return null;
     }
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
-    }
-
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        MainActivity mainActivity = (MainActivity) getActivity();
-//        LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        View customActionBar = inflater.inflate(R.layout.ab_main, null);
-//        mainActivity.setCustomActionBar(customActionBar);
-//    }
 }

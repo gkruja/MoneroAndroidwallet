@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private TextView mHeightValue;
     private Handler mHandler;
     final ViewGroup nullParent = null;
+    private String mNodeAdress;
 
 
     @Override
@@ -67,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         setSupportActionBar(mToolbar);
 
         if(getIntent() != null && getIntent().hasExtra(SettingActivity.EXTRA_ADDRESS)){
-            String ipPort = getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS);
-
-            
+            mNodeAdress = getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS);
         }
 
         //check file storage for a file with .keys extension and return true or false;
@@ -309,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                             String address = sendFragment.getAddress();
                             String paymentID = sendFragment.getPaymentID();
 
-                            //TODO: call native to send transaction.
                             SendTransfer(address, Double.parseDouble(amount));
                             Toast.makeText(MainActivity.this , "Transaction send!", Toast.LENGTH_SHORT).show();
                         }else{
@@ -327,13 +325,15 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
             actionSync.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: handle sync the wallet
-
                     Toast.makeText(MainActivity.this, "Action Sync", Toast.LENGTH_SHORT).show();
                     //if no connection. return
-
                     if(mService == null)
                         return;
+
+                    if(mNodeAdress!= null){
+                        mService.checkHeight(mNodeAdress);
+                        return;
+                    }
 
                     mService.checkHeight();
                 }
@@ -428,10 +428,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 111){
             if(resultCode == RESULT_OK){
-
-                String ipPort = data.getStringExtra(SettingActivity.EXTRA_ADDRESS);
-
-                //TODO: do something with the address and port.
+                mNodeAdress = data.getStringExtra(SettingActivity.EXTRA_ADDRESS);
             }
         }
     }

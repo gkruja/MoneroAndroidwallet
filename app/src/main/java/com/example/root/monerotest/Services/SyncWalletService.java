@@ -83,6 +83,14 @@ public class SyncWalletService extends Service {
             Toast.makeText(this, "wallet height not less than daemonHeight",Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void checkHeight(String _ipPort){
+        //TODO: update wallet2 ip to the function parameter.
+
+        
+
+        checkHeight();
+    }
     public void syncWalletToDaemon(){
         //Create a foreground service attach to a notification.
         mNotification = NotificationUtils.getSyncWalletNotification(getApplicationContext());
@@ -99,7 +107,7 @@ public class SyncWalletService extends Service {
                 Intent syncCompleted = new Intent();
                 syncCompleted.setAction(ACTION_SYNC_DONE);
 
-                //Send a breadcast to update
+                //Send a broadcast to update
                 sendBroadcast(syncCompleted);
 
                 //Stop foreground service no longer needed.

@@ -67,9 +67,10 @@ public class SettingActivity extends AppCompatActivity {
 
             //TODO: validate ip:port.
             if(!fragment.isNodeAddressValid()){
+                String ipPort = fragment.getIpPort();
                 //Launch main activity since it wasn't opened by main acitvity itself.
                 if(getIntent() != null && getIntent().getIntExtra(EXTRA_STATE, 0) == 0){
-                    String ipPort = fragment.getIpPort();
+
                     if(!ipPort.isEmpty()){
                         Intent mainActivity = new Intent(this, MainActivity.class);
                         mainActivity.putExtra(EXTRA_ADDRESS, ipPort);
@@ -80,7 +81,7 @@ public class SettingActivity extends AppCompatActivity {
                 }
 
                 //Close settings and show activity in the back stack. (previous one)
-                String ipPort = fragment.getIpPort();
+                //String ipPort = fragment.getIpPort();
                 //pass the ipPort back to the mainActivity that was already opened.
                 Intent result = new Intent();
                 result.putExtra(EXTRA_ADDRESS, ipPort);
