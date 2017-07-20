@@ -147,7 +147,18 @@ public:
     bool deinit(){
         return wallet2->deinit();
     }
+    bool reinit(string address){
 
+        if(wallet2 == nullptr)
+            return false;
+
+        bool deinit = wallet2->deinit();
+
+        if(deinit)
+        {
+            return wallet2->init(address);
+        }
+    }
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;

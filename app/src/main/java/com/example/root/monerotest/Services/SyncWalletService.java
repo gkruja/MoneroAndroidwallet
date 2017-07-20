@@ -84,13 +84,7 @@ public class SyncWalletService extends Service {
         }
     }
 
-    public void checkHeight(String _ipPort){
-        //TODO: update wallet2 ip to the function parameter.
 
-        
-
-        checkHeight();
-    }
     public void syncWalletToDaemon(){
         //Create a foreground service attach to a notification.
         mNotification = NotificationUtils.getSyncWalletNotification(getApplicationContext());

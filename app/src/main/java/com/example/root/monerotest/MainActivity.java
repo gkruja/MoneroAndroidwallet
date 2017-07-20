@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private TextView mHeightValue;
     private Handler mHandler;
     final ViewGroup nullParent = null;
-    private String mNodeAdress;
 
 
     @Override
@@ -67,16 +66,9 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        //Check if activity was started by settings. and check if address exists in the intent.
-        if(getIntent() != null && getIntent().hasExtra(SettingActivity.EXTRA_ADDRESS)){
-            mNodeAdress = getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS);
-        }
-
         //check file storage for a file with .keys extension and return true or false;
         if(checkWalletFileAvailable()){
-            //Initialize wallet with IP:PORT entered in settings.
-            if(mNodeAdress != null)
-                InitWallet(WALLET_PATH, mNodeAdress, "password");
+
             //Initialize wallet with default IP:PORT (Monero-World)
             InitWallet(WALLET_PATH);
         }
@@ -220,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                         Intent settings = new Intent(MainActivity.this, SettingActivity.class);
                         settings.putExtra(SettingActivity.EXTRA_STATE, 1);
                         startActivity(settings);
-                        startActivityForResult(settings, 111);
+                        //startActivityForResult(settings, 111);
                         //getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
 
@@ -334,10 +326,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                     if(mService == null)
                         return;
 
-                    if(mNodeAdress!= null){
-                        mService.checkHeight(mNodeAdress);
-                        return;
-                    }
+
 
                     mService.checkHeight();
                 }
@@ -428,21 +417,14 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     };
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 111){
-            if(resultCode == RESULT_OK){
-                mNodeAdress = data.getStringExtra(SettingActivity.EXTRA_ADDRESS);
-            }
-        }
-    }
+
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
     public native int WalletHeight();
-    private native boolean InitWallet(String path, String address, String password);
+   // private native boolean InitWallet(String path, String address, String password);
     private native boolean InitWallet(String path);
     public native String SendTransfer(String Address, double Amount);
 

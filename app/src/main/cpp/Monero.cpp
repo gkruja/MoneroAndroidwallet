@@ -62,7 +62,7 @@ using namespace cryptonote;
         }
         crypto::secret_key secretKey, recover_key ;
         try {
-         recover_key  =    wallet2->generate(path + "/monero/" + Name, Password, secretKey, false, false);
+         recover_key  =    wallet2->generate(path, Password, secretKey, false, false);
         }catch (const std::exception &e){
             LOG_ERROR("wallet Error creating:" << e.what());
             return false;

@@ -19,6 +19,9 @@ public class SettingActivity extends AppCompatActivity {
     public static final String EXTRA_STATE = "EXTRA_STATE";
     public static final String EXTRA_ADDRESS = "EXTRA_ADDRESS";
 
+    public native void ReInitWallet(String address);
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +75,8 @@ public class SettingActivity extends AppCompatActivity {
                 if(getIntent() != null && getIntent().getIntExtra(EXTRA_STATE, 0) == 0){
 
                     if(!ipPort.isEmpty()){
-                        Intent mainActivity = new Intent(this, MainActivity.class);
-                        mainActivity.putExtra(EXTRA_ADDRESS, ipPort);
-                        startActivity(mainActivity);
+
+                        ReInitWallet(ipPort);
                         return true;
                     }
 
