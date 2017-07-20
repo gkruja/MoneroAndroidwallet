@@ -13,11 +13,14 @@ import android.view.MenuItem;
 
 import com.example.root.monerotest.MenuFragments.SettingsFragment;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity{
 
     public static final String PREF_FILE = "user_pref.dat";
     public static final String EXTRA_STATE = "EXTRA_STATE";
     public static final String EXTRA_ADDRESS = "EXTRA_ADDRESS";
+    public static final String EXTRA_IP = "EXTRA_IP";
+    public static final String EXTRA_NETWORK_PREF = "EXTRA_NET_PREF";
+    public static final String EXTRA_SYNC_SLEEP = "EXTRA_SYNC_SLEEP";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,27 +53,26 @@ public class SettingActivity extends AppCompatActivity {
 
                 String ipPort = fragment.getIpPort();
 
+
                 //Notify to app that we have a ip:port from user.
                SharedPreferences pref = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
                 SharedPreferences.Editor edit = pref.edit();
                 edit.putInt(EXTRA_STATE, 1);
+                edit.putString(EXTRA_IP, ipPort);
                 edit.apply();
 
                 //Launch main activity since it wasn't opened by main acitvity itself.
                 if(getIntent() != null && getIntent().getIntExtra(EXTRA_STATE, 0) == 0){
-
                         //Launch main activity for first time.
                         Intent mainActivity = new Intent(this, MainActivity.class);
-                        mainActivity.putExtra(EXTRA_ADDRESS, ipPort);
                         startActivity(mainActivity);
                         return true;
-
                 }
 
                 //Activity was opened from the main Activity.
 
                 //We assume wallet2 is already loaded. since Settings was opened from MainActivity.
-                ReInitWallet(ipPort);
+                //ReInitWallet(ipPort);
                 finish();
                 return true;
             }

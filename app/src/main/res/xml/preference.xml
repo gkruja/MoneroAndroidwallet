@@ -25,8 +25,8 @@
         <ListPreference
             android:key="network_list_key"
             android:title="network_list_title"
-            android:entryValues="@array/networkPrefValue"
-            android:entries="@array/networkPrefValue"/>
+            android:entryValues="@array/networkPref"
+            android:entries="@array/networkPref"/>
     </PreferenceCategory>
 
 
@@ -36,7 +36,7 @@
         android:key="category_sync_at_night">
 
         <SwitchPreference
-            android:title="when charging and WIFI on"
+            android:title="Auto-sync at nights"
             android:key="switch_sync_night"/>
     </PreferenceCategory>
 

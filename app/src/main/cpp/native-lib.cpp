@@ -100,7 +100,7 @@ Java_com_example_root_monerotest_MainActivity_InitWallet(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_example_root_monerotest_MainActivity_getDaemonAddress(
+Java_com_example_root_monerotest_MainActivity_GetDaemonAddress(
         JNIEnv *env,
         jobject /* this */)
 {
@@ -111,6 +111,7 @@ JNIEXPORT jint JNICALL
 Java_com_example_root_monerotest_Services_SyncWalletService_WalletHeight(
         JNIEnv *env,
         jobject /* this */) {
+
 
     return wallet2.WalletLocalHeight();
 

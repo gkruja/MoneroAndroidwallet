@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.root.monerotest.MenuFragments.SendFragment;
 import com.example.root.monerotest.R;
 import com.google.zxing.Result;
 
@@ -124,18 +125,16 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
         final String MYresult = result.getText();
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
+
        Pattern pattern = Pattern.compile("monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?$");
-        Matcher matcher = pattern.matcher(MYresult);
-        int num = matcher.groupCount();
+      //  Matcher matcher = pattern.matcher(MYresult);
+        //int num = matcher.groupCount();
         String address;
         double ammount;
         String paymentID;
+        String EXAMPLE_TEST =  MYresult;
 
-
-
-
-
-
+        String[] splitString = (EXAMPLE_TEST.split("/monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?/g"));
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -157,6 +156,15 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
         builder.setMessage(result.getText());
         AlertDialog alert1 = builder.create();
         alert1.show();
+
+        Intent resultIntent = new Intent();
+
+        resultIntent.putExtra(SendFragment.EXTRA_ADDRESS, result.getText());
+//        resultIntent.putExtra(SendFragment.EXTRA_AMOUNT, "amount");
+//        resultIntent.putExtra(SendFragment.EXTRA_INTEGRATED, "integrated");
+//        resultIntent.putExtra(SendFragment.EXTRA_PAYMENT_ID, "payment_id");
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
 

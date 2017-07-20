@@ -166,7 +166,7 @@ public:
     }
 
     string getDaemonaddress(){
-        if(wallet2 != nullptr)
+        if(wallet2 == nullptr)
             return "";
         return wallet2->get_daemon_address();
     }

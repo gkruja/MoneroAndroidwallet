@@ -1,13 +1,17 @@
 package com.example.root.monerotest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -65,15 +69,21 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        SharedPreferences pref = getSharedPreferences(SettingActivity.PREF_FILE, MODE_PRIVATE);
+
+        //Set alarm for auto-sync if setting set.
+        if(pref.getBoolean(SettingActivity.EXTRA_SYNC_SLEEP, false))
+        setAutoSyncAlarm();
+
 
         if(checkWalletFileAvailable()){
             //Initialize wallet with default IP:PORT (Monero-World)
             InitWallet(WALLET_PATH);
 
-            //If custom ip:port is available, use it.
-            if(getIntent() != null && getIntent().hasExtra(SettingActivity.EXTRA_ADDRESS)){
-                //check file storage for a file with .keys extension and return true or false;
-                ReInitWallet(getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS));
+
+            String ip = pref.getString(SettingActivity.EXTRA_IP, "");
+            if(!ip.isEmpty()){
+                ReInitWallet(ip);
             }
         }
 
@@ -287,7 +297,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 @Override
                 public void onClick(View v) {
                     Intent startQRReaderActivity = new Intent(MainActivity.this, QRReaderActivity.class);
-                    startActivity(startQRReaderActivity);
+                    //startActivity(startQRReaderActivity);
+                    startActivityForResult(startQRReaderActivity, 222);
                 }
             });
 
@@ -309,10 +320,20 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                             String address = sendFragment.getAddress();
                             String paymentID = sendFragment.getPaymentID();
 
-                            SendTransfer(address, Double.parseDouble(amount));
-                            Toast.makeText(MainActivity.this , "Transaction send!", Toast.LENGTH_SHORT).show();
+                            String ip = GetDaemonAddress();
+                            //display the IP:PORT that the tx used.
+                            Toast.makeText(MainActivity.this, "Transaction successfully sent.  Address used:\n " +
+                                    ip, Toast.LENGTH_LONG).show();
+
+                            String test = SendTransfer(address, Double.parseDouble(amount));
+
+                            //Loads dashboard.
+                            DashboardFragment dashboardFragment = DashboardFragment.newInstance();
+                            setTitle(getString(R.string.nav_item_dashboard_title));
+                            mCurrentFragmentID = R.id.item_dashboard;
+                            getFragmentManager().beginTransaction().replace(R.id.main_content, dashboardFragment).commit();
                         }else{
-                            Toast.makeText(MainActivity.this , "fields not valid", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this , "fields not valid", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -331,8 +352,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                     if(mService == null)
                         return;
 
-
-
                     mService.checkHeight();
                 }
             });
@@ -348,6 +367,20 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         actionBar.setCustomView(view);
     }
 
+
+    public void setAutoSyncAlarm(){
+
+        AlarmManager alarmMgr;
+        PendingIntent alarmIntent;
+
+        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intentBroadcast = new Intent(this, AutoSyncBroadcast.class);
+        alarmIntent = PendingIntent.getBroadcast(this, 0, intentBroadcast, 0);
+
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() +
+                       60 * 60 * 1000, alarmIntent);
+    }
     /**
      * Callbacks so the service can report back to main activity.
      */
@@ -373,8 +406,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mSyncProgressBar.setMax(max);
         runnableUpdateBar.run();
     }
-
-
     private void updateBar(){
         if(mSyncProgressBar == null)
             return;
@@ -422,15 +453,39 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     };
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 222) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                SendFragment fragment = (SendFragment) getFragmentManager().findFragmentById(R.id.main_content);
+                if(fragment == null)
+                    return;
 
+                //get the send fragment and load it with data inside intent.
+                //                String amount = data.getStringExtra(SendFragment.EXTRA_AMOUNT);
+//                String paymentID = data.getStringExtra(SendFragment.EXTRA_PAYMENT_ID);
+//                String integrated = data.getStringExtra(SendFragment.EXTRA_INTEGRATED);
+                String result = data.getStringExtra(SendFragment.EXTRA_ADDRESS);
+
+                //TODO:logic.
+
+
+                //TODO: pass the data to the setData in fragment.
+
+
+            }
+        }
+    }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
+    public native String GetDaemonAddress();
     public native int WalletHeight();
     private native boolean ReInitWallet(String ipPort);
-   // private native boolean InitWallet(String path, String address, String password);
     private native boolean InitWallet(String path);
     public native String SendTransfer(String Address, double Amount);
 

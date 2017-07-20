@@ -21,6 +21,11 @@ public class SendFragment extends Fragment {
 
     public static final String TAG = "sendFragment.TAG";
 
+    public static final String EXTRA_ADDRESS = "address";
+    public static final String EXTRA_PAYMENT_ID= "payment_id";
+    public static final String EXTRA_AMOUNT = "amount";
+    public static final String EXTRA_INTEGRATED = "integrated_address";
+
     public native String SendTransfer(String Address, double Amount, int mixin);
 
     public native boolean CheckPaymentID(String PaymentID);

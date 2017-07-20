@@ -192,7 +192,7 @@ static std::string get_human_readable_time(uint64_t ts)
 
 
 
-        int transfer_type = TransferOriginal;
+        int transfer_type = TransferNew;
 
         size_t fake_outs_count = 9;
 

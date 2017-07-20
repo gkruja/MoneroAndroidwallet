@@ -22,9 +22,14 @@
         <item>3x fee</item>
     </string-array>
 
-    <string-array name="networkPrefValue">
+    <string-array name="networkPref">
         <item>WIFI Only</item>
         <item>Carrier Data</item>
+    </string-array>
+
+    <string-array name="networkPrefValue">
+        <item>0</item>
+        <item>1</item>
     </string-array>
 
 

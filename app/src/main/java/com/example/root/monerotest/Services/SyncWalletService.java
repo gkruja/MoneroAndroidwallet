@@ -5,11 +5,16 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
+
+import com.example.root.monerotest.SettingActivity;
 import com.example.root.monerotest.Utils.NotificationUtils;
 
 import java.io.File;
@@ -26,12 +31,34 @@ public class SyncWalletService extends Service {
     private Callbacks mCallbacks;
     private Thread mThread;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public boolean checkNetworkPref() {
+       SharedPreferences pref =  getSharedPreferences(SettingActivity.PREF_FILE, MODE_PRIVATE);
+        // 0 means WIFI only
+        // 1 means Cell Data.
+        int net_pref =  pref.getInt(SettingActivity.EXTRA_NETWORK_PREF, 0);
 
-        //initWallet();
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        boolean isWifiOn = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+
+        //If no wifi available and net_pref is set to Wifi-only.
+        if(!isWifiOn && net_pref == 0){
+            Toast.makeText(this, "No wifi available. Don't have permission to use cell data",
+                            Toast.LENGTH_LONG).show();
+            //Exit since we don't have permission to use cell data.
+            stopSelf();
+            return false;
+        }
+
+        //TODO: check if the address is local. it can crash when address is local and wifi is off, but
+        //TODO: seeting is set to sync with cell data. JNI crashes since exceptions are not handle yet.
+
+        //Continue since we have permission
+        return true;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -43,24 +70,11 @@ public class SyncWalletService extends Service {
         mCallbacks = null;
     }
 
-
-
-//    public void initWallet(){
-//        String extStore = System.getenv("EXTERNAL_STORAGE");
-//        File externalStorage = Environment.getExternalStorageDirectory();
-//
-//        //Load wallet fmor external storage
-//        boolean success = InitWallet(externalStorage.getPath());
-//
-//
-//        if(success){
-//            Toast.makeText(this, "Wallet loaded", Toast.LENGTH_SHORT).show();
-//            //checkHeight();
-//        }else{
-//                stopSelf();
-//        }
-//    }
     public void checkHeight(){
+
+        if(!checkNetworkPref()){
+            return;
+        }
 
         int walletHeight = 0;
         int daemonHeight = 0;
@@ -111,6 +125,7 @@ public class SyncWalletService extends Service {
         mThread = new Thread(runnable);
         mThread.start();
     }
+
     public void registerClient(Activity activity){
         mCallbacks = (Callbacks)activity;
     }
