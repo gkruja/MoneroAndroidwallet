@@ -7,8 +7,8 @@
 
 
         <EditTextPreference
-
-            android:key="edittext_key_address_to_connect"
+            android:id="@+id/ip_port_edittext"
+            android:key="editTextAddress"
             android:title="(IP:PORT ex: 127.0.0.1:8080)"
             android:textColorHighlight="@color/gray_title_color"
             android:shadowColor="@color/gray_title_color"

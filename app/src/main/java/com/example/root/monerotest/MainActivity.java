@@ -66,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        if(getIntent() != null && getIntent().hasExtra(SettingActivity.EXTRA_ADDRESS)){
+            String ipPort = getIntent().getStringExtra(SettingActivity.EXTRA_ADDRESS);
+
+            
+        }
+
         //check file storage for a file with .keys extension and return true or false;
         if(checkWalletFileAvailable()){
             //Initialize wallet.
@@ -211,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                         Intent settings = new Intent(MainActivity.this, SettingActivity.class);
                         settings.putExtra(SettingActivity.EXTRA_STATE, 1);
                         startActivity(settings);
+                        startActivityForResult(settings, 111);
                         //getFragmentManager().beginTransaction().replace(R.id.main_content, settingsFragment).commit();
                         break;
 
@@ -416,6 +423,18 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         }
     };
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 111){
+            if(resultCode == RESULT_OK){
+
+                String ipPort = data.getStringExtra(SettingActivity.EXTRA_ADDRESS);
+
+                //TODO: do something with the address and port.
+            }
+        }
+    }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
