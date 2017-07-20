@@ -144,6 +144,10 @@ public:
         }
     }
 
+    bool deinit(){
+        return wallet2->deinit();
+    }
+
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;

@@ -50,14 +50,34 @@ Java_com_example_root_monerotest_MainActivity_InitWallet(
         init = wallet2.init(daemon, password, path, true, 4);
     } else
     {
-        wallet2.GenerateWallet(path,"example",password);
+        wallet2.GenerateWallet(path,password);
 
         init = wallet2.init(daemon, password, path, true, 4);
     }
 
     return init;
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_MainActivity_ReInitWallet(
+        JNIEnv *env,
+        jobject /* this */,jstring Path,jstring DaemonAddress,jstring Password)
+{
+    bool init =false ;
+    string path = env->GetStringUTFChars(Path,0);
+    string daemon = env->GetStringUTFChars(DaemonAddress,0);
+    string password = env->GetStringUTFChars(Password,0);
+    if (std::ifstream(path)) {
 
+        //159.203.250.205:38081
+        //192.168.1.141:28081
+        bool deinit = wallet2.deinit();
+        if(deinit)
+        init = wallet2.init(daemon, password, path, true, 4);
+    }
+
+    return init;
+}
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_MainActivity_InitWallet(
@@ -72,7 +92,7 @@ Java_com_example_root_monerotest_MainActivity_InitWallet(
         init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
     } else
     {
-        wallet2.GenerateWallet(path,"example","password");
+        wallet2.GenerateWallet(path,"password");
 
         init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
     }
