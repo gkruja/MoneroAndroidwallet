@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.example.root.monerotest.R;
 import com.google.zxing.Result;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -117,10 +120,23 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
                 .show();
     }
     @Override
-    public void handleResult(Result result) {
+    public void handleResult(final Result result) {
         final String MYresult = result.getText();
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
+       Pattern pattern = Pattern.compile("monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?$");
+        Matcher matcher = pattern.matcher(MYresult);
+        int num = matcher.groupCount();
+        String address;
+        double ammount;
+        String paymentID;
+
+
+
+
+
+
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Scan Result");
@@ -134,11 +150,14 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO: Pass back info into send fragment and fill fields with Correct info
-                
+
+
             }
         });
         builder.setMessage(result.getText());
         AlertDialog alert1 = builder.create();
         alert1.show();
     }
+
+
 }

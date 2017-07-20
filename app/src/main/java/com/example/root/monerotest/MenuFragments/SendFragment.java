@@ -140,4 +140,17 @@ public class SendFragment extends Fragment {
     }
 
 
+
+    public void setdata(String Address, String PaymentID,double Amount){
+
+    }
+    public void setdata(String Address, String PaymentID){
+
+    }
+    public void setdata(String Address, double Amount){
+
+    }
+    public void setdata(String Address){
+
+    }
 }

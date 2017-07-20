@@ -4,7 +4,12 @@
 
 
 
+
 Monero::AndroidWallet  wallet2;
+
+
+
+
 
 
 extern "C"
@@ -294,3 +299,4 @@ Java_com_example_root_monerotest_QRGenerator_QRGeneratorFragment_GetAddress(
 
     return env->NewStringUTF(wallet2.address().c_str());
 }
+
