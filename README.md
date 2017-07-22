@@ -50,7 +50,7 @@ Patches should be self contained. A good rule of thumb is to have one patch per 
 - [x] Send transactions (little buggy, needs more testing).
 - [x] Display all transactions from wallet into a `ListView`.
 - [x] Ability to generate a QR image using the integrated address.
-- [x] Ability to read a QR image and validate data. (Send Fragment)*
+- [x] Ability to read a QR image and validate data. (Send Fragment)
 ### What is currently missing?
 
 - [] \(Optional) Splash screen to give a better experience to user while loading libs.

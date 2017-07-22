@@ -126,37 +126,9 @@ public class QRReaderActivity extends AppCompatActivity implements ZXingScannerV
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
 
-       Pattern pattern = Pattern.compile("monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?$");
-      //  Matcher matcher = pattern.matcher(MYresult);
-        //int num = matcher.groupCount();
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Result");
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mScannerView.resumeCameraPreview(QRReaderActivity.this);
-            }
-        });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO: Pass back info into send fragment and fill fields with Correct info
-
-
-            }
-        });
-        builder.setMessage(result.getText());
-        AlertDialog alert1 = builder.create();
-        alert1.show();
-
         Intent resultIntent = new Intent();
 
         resultIntent.putExtra(SendFragment.EXTRA_ADDRESS, result.getText());
-//        resultIntent.putExtra(SendFragment.EXTRA_AMOUNT, "amount");
-//        resultIntent.putExtra(SendFragment.EXTRA_INTEGRATED, "integrated");
-//        resultIntent.putExtra(SendFragment.EXTRA_PAYMENT_ID, "payment_id");
         setResult(RESULT_OK, resultIntent);
         finish();
     }

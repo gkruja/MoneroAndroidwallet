@@ -1,9 +1,8 @@
 #include <jni.h>
 #include <string>
 #include "Monero.h"
-#include "boost/optional/optional.hpp"
-#include "reg_exp_definer.h"
-#include <boost/regex/v4/regex_search.hpp>
+
+#include <boost/regex.hpp>
 
 const static epee::global_regexp_critical_section gregexplock;
 
@@ -16,20 +15,26 @@ Java_com_example_root_monerotest_MainActivity_ParseQR(JNIEnv *env, jobject insta
                                                                    jstring Qrresult_) {
     string Qrresult = env->GetStringUTFChars(Qrresult_, 0);
 
-    string regex = "monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?";
-    STATIC_REGEXP_EXPR_1(rexp_match_uri,  regex , boost::regex::icase | boost::regex::normal);
+    boost::regex expr  {"monero:(\\w{95})(\\?tx_amount=(\\d+))?((\\?|&)tx_payment_id=(\\w*))?"};
 
     boost::smatch result;
+    string zero;
+    string one;
+    string two;
+    string three;
+    string four;
+    string five;
+    string six;
+   bool test =  boost::regex_search(Qrresult,result,expr);
 
-    boost::regex_search(Qrresult, result, rexp_match_uri, boost::match_default) ;
+         one = result[1];
+         three = result[3];
+         six = result[6];
 
 
-    string zero = result[0];
-    string one = result[1];
-    string two = result[2];
-    string three = result[3];
-    string four = result[4];
-    string five = result[5];
+
+
+
 
     return env->NewStringUTF(one.c_str());
 

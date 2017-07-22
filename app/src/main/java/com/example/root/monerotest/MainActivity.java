@@ -38,6 +38,8 @@ import com.example.root.monerotest.QRReader.QRReaderActivity;
 import com.example.root.monerotest.Services.SyncWalletService;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity implements ServiceConnection, SyncWalletService.Callbacks {
@@ -110,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     protected void onStart() {
         super.onStart();
         mBound = false;
+
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(SyncWalletService.ACTION_SYNC_DONE);
         registerReceiver(mBroadcast, filter);
@@ -463,22 +467,35 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 if(fragment == null)
                     return;
 
-                //get the send fragment and load it with data inside intent.
-                //                String amount = data.getStringExtra(SendFragment.EXTRA_AMOUNT);
-//                String paymentID = data.getStringExtra(SendFragment.EXTRA_PAYMENT_ID);
-//                String integrated = data.getStringExtra(SendFragment.EXTRA_INTEGRATED);
                 String result = data.getStringExtra(SendFragment.EXTRA_ADDRESS);
 
-                //TODO:logic.
+                String address =null;
+                String Paymentid = null;
+                Double Amount = null;
+                String[] testing = result.split("[^a-zA-Z0-9_.]");
 
-                String[] match = result.split(":");
-                String[] test = match[1].split("\\?");
-                String[] test2 = result.split("=");
-                String address = test[0];
-                String Paymentid = test2[1];
-                //TODO: pass the data to the setData in fragment.
+                for (int i=0 ;i<testing.length; i+=2){
+                    if(testing[i].equals("monero")){
+                        address = testing[i+1];
+                    }
+                    if(testing[i].equals("tx_amount")){
+                        Amount =Double.parseDouble(testing[i+1]);
+                    }
+                    if(testing[i].equals("tx_payment_id")){
+                        Paymentid = testing[i+1];
+                    }
+                }
 
-                fragment.setdata(address,Paymentid);
+                // pass the data to the setData in fragment.
+
+                if(Amount == null && Paymentid == null){
+                    fragment.setdata(address);}
+                else if(Amount == null){
+                    fragment.setdata(address,Paymentid);}
+                else  if(Paymentid == null){
+                    fragment.setdata(address,Amount);}
+                else{
+                fragment.setdata(address,Paymentid,Amount);}
 
             }
         }

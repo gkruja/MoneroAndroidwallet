@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.monerotest.MainActivity;
@@ -147,8 +147,21 @@ public class SendFragment extends Fragment {
 
 
     public void setdata(String Address, String PaymentID,double Amount){
+        if(getView() == null)
+            return;
 
+        EditText editext_address = (EditText) getView().findViewById(R.id.addressValue);
+
+        editext_address.setText(Address);
+
+        EditText editext_payid = (EditText) getView().findViewById(R.id.paymentID_edittext);
+
+        editext_payid.setText(PaymentID);
+
+        EditText amount = (EditText) getView().findViewById(R.id.amountValue);
+        amount.setText(Double.toString( Amount));
     }
+
     public void setdata(String Address, String PaymentID){
         if(getView() == null)
             return;
@@ -161,9 +174,23 @@ public class SendFragment extends Fragment {
 
         editext_payid.setText(PaymentID);
     }
-    public void setdata(String Address, double Amount){
 
+    public void setdata(String Address, double Amount){
+        if(getView() == null)
+            return;
+
+        EditText editext_address = (EditText) getView().findViewById(R.id.addressValue);
+
+        editext_address.setText(Address);
+
+        EditText editext_payid = (EditText) getView().findViewById(R.id.paymentID_edittext);
+
+        editext_payid.setText("");
+
+        EditText amount = (EditText) getView().findViewById(R.id.amountValue);
+        amount.setText(Double.toString( Amount));
     }
+
     public void setdata(String Address){
 
         if(getView() == null)
@@ -172,6 +199,13 @@ public class SendFragment extends Fragment {
         EditText editext_address = (EditText) getView().findViewById(R.id.addressValue);
 
         editext_address.setText(Address);
+        EditText editext_payid = (EditText) getView().findViewById(R.id.paymentID_edittext);
 
+        editext_payid.setText("");
+
+        EditText amount = (EditText) getView().findViewById(R.id.amountValue);
+        amount.setText("");
     }
 }
+
+
