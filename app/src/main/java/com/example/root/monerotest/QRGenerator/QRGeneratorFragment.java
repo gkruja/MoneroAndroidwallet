@@ -20,7 +20,9 @@ import net.glxn.qrgen.android.QRCode;
 
 
 public class QRGeneratorFragment extends Fragment {
+
     static {
+        System.loadLibrary("c++_shared");
         System.loadLibrary("native-lib");
     }
 

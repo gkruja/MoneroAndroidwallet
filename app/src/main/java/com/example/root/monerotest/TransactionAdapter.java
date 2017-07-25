@@ -52,8 +52,10 @@ public class TransactionAdapter extends ArrayAdapter {
 
                 temp =  receivedObject.getJSONObject(i);
 
-                String amount = String.format("%9f",temp.getDouble("amount"));
-                String fee = String.format("%.5f",temp.getDouble("fee"));
+                String amount = String.format("%.12f",temp.getDouble("amount"));
+                String fee = String.format("%.12f",temp.getDouble("fee"));
+                //String amount = Double.toString(temp.getDouble("amount"));
+                //String fee = Double.toString (temp.getDouble("fee"));
                 String type = temp.getString("type");
                 String paymentID = temp.getString("Payment_id");
                 int BlockHeight = temp.getInt("blockheight");
@@ -146,7 +148,7 @@ public class TransactionAdapter extends ArrayAdapter {
         if(transaction == null)
             return null;
 
-        if(transaction.getFee().equals("0.00000"))
+        if(transaction.getFee().equals("0.000000000000"))
         {
             holder.amountTextView.setTextColor(Color.rgb(54,176,91));
             //holder.feeTextView.setTextColor(Color.rgb(54,176,91));
@@ -156,7 +158,7 @@ public class TransactionAdapter extends ArrayAdapter {
 
         }
 
-       holder.amountTextView.setText(transaction.getAmount());
+       holder.amountTextView.setText(transaction.getAmount().substring(0,9));
         //holder.feeTextView.setText(transaction.getFee());
         holder.dateTextView.setText(transaction.getDate());
         holder.timeTextView.setText(transaction.getTime());

@@ -32,13 +32,7 @@ Java_com_example_root_monerotest_MainActivity_ParseQR(JNIEnv *env, jobject insta
          six = result[6];
 
 
-
-
-
-
     return env->NewStringUTF(one.c_str());
-
-
 
 }
 
@@ -69,6 +63,8 @@ Java_com_example_root_monerotest_Services_SyncWalletService_InitWallet(
 
     return init;
 }
+
+// TODO: check if still needed now or in the future
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -333,3 +329,30 @@ Java_com_example_root_monerotest_QRGenerator_QRGeneratorFragment_GetAddress(
     return env->NewStringUTF(wallet2.address().c_str());
 }
 
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MenuFragments_ReceiveFragment_GetAddress(
+        JNIEnv *env, jobject /* this */) {
+
+    return env->NewStringUTF(wallet2.address().c_str());
+
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MenuFragments_ReceiveFragment_GeneratePaymentId(
+        JNIEnv *env, jobject /* this */) {
+
+    return env->NewStringUTF(wallet2.get_payment_id().c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MenuFragments_ReceiveFragment_GetIntegratedAddress(
+        JNIEnv *env, jobject /* this */, jstring _paymentid) {
+
+    string paymentid = env->GetStringUTFChars(_paymentid,0);
+
+    return env->NewStringUTF(wallet2.getIntegratedAddress(paymentid).c_str());
+
+}

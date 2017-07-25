@@ -23,6 +23,7 @@ import java.io.File;
 public class SyncWalletService extends Service {
 
     static {
+        System.loadLibrary("c++_shared");
         System.loadLibrary("native-lib");
     }
 

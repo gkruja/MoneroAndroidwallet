@@ -15,13 +15,13 @@ android {
                 cppFlags "-std=c++11"
                 cppFlags "-fexceptions", "-frtti"
 
-                arguments '-DANDROID_STL=c++_shared', '-DANDROID_TOOLCHAIN=gcc'
+                arguments '-DANDROID_STL=c++_shared', '-DANDROID_TOOLCHAIN=clang'
             }
         }
         ndk {
             // Specifies the ABI configurations of your native
             // libraries Gradle should build and package with your APK.
-            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
 
     }

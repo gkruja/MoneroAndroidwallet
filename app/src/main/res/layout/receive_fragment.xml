@@ -36,13 +36,16 @@
                 android:textSize="16sp"/>
 
             <EditText
+                android:id="@+id/addressValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/colorPrimary"
-                android:inputType="textLongMessage"/>
+                android:textIsSelectable="true"
+                android:textSize="15sp"
+                />
 
 
             <TextView
@@ -70,7 +73,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@color/gray_title_color"
                     android:textColor="@color/menu_background_color"
-                    android:textSize="16sp"/>
+                    android:textSize="13sp"/>
 
 
                 <ImageButton
@@ -103,6 +106,7 @@
 
 
                 <EditText
+                    android:id="@+id/paymentID_edittext"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -114,6 +118,7 @@
 
 
                 <Button
+                    android:id="@+id/button_generate"
                     android:layout_width="wrap_content"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_marginStart="8dp"

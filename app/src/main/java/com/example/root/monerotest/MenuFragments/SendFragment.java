@@ -30,7 +30,7 @@ public class SendFragment extends Fragment {
 
     public native boolean CheckPaymentID(String PaymentID);
 
-    public native boolean CheckAddress(String PaymentID);
+    public native boolean CheckAddress(String Address);
 
     public static SendFragment newInstance() {
         return new SendFragment();

@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
     // Used to load the 'native-lib' library on application startup.
     static {
+        System.loadLibrary("c++_shared");
         System.loadLibrary("native-lib");
     }
 
