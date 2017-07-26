@@ -59,7 +59,8 @@ Patches should be self contained. A good rule of thumb is to have one patch per 
 		explorer to allow the user to chose the location. However, i'm up for ideas.*
 - [ ] Functionality to select a remote node in the settings fragment.
 - [ ] Wallet will automatically update itself whenever the phone is plugged and connect to WIFI.
-- [ ] if you have more ideas or features, please PM me.
+
+##### if you have more ideas or features, please PM me.
 
 
 
