@@ -32,4 +32,19 @@
         <item name="android:backgroundTint">@color/menu_background_color</item>
     </style>
 
+
+    <style name="slash_art">
+        <item name="android:layout_width">@dimen/splashArtSize</item>
+        <item name="android:layout_height">@dimen/splashArtSize</item>
+        <item name="android:background">@color/menu_font_color</item>
+    </style>
+
+    <style name="slash_text">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/menu_background_color</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

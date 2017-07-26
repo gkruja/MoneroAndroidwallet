@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/menu_font_color"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_height="535dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:id="@+id/left_slash"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/action_open_wallet"
+                style="@style/slash_art"
+                android:layout_gravity="center"
+                android:src="@drawable/art_open_account"/>
+
+
+            <TextView
+                android:text="Create Wallet"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                style="@style/slash_text"/>
+
+
+            <ImageButton
+                android:id="@+id/action_restore_wallet"
+                style="@style/slash_art"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/splashArtSize"
+                android:src="@drawable/art_recover_wallet"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_slash"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:text="Open Wallet"
+                android:layout_gravity="center"
+                style="@style/slash_text"/>
+
+
+            <ImageButton
+                android:id="@+id/action_create_wallet"
+                style="@style/slash_art"
+                android:layout_marginTop="@dimen/splashArtSize"
+                android:layout_gravity="center"
+                android:src="@drawable/art_create_wallet"/>
+
+            <TextView
+                android:text="Restore Wallet"
+                style="@style/slash_text"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
