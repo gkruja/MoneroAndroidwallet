@@ -53,13 +53,14 @@ Patches should be self contained. A good rule of thumb is to have one patch per 
 - [x] Ability to read a QR image and validate data. (Send Fragment)
 ### What is currently missing?
 
-- [] \(Optional) Splash screen to give a better experience to user while loading libs.
-- [] Initial activity to either generate a new wallet or load one from file storage.
+- [ ] \(Optional) Splash screen to give a better experience to user while loading libs.
+- [ ] Initial activity to either generate a new wallet or load one from file storage.
 		**note:** *For loading wallet from location I'd like to using some sort of file 
 		explorer to allow the user to chose the location. However, i'm up for ideas.*
-- [] Functionality to select a remote node in the settings fragment.
-- [] Wallet will automatically update itself whenever the phone is plugged and connect to WIFI.
-- [] if you have more ideas or features, please PM me.
+- [ ] Functionality to select a remote node in the settings fragment.
+- [ ] Wallet will automatically update itself whenever the phone is plugged and connect to WIFI.
+
+##### if you have more ideas or features, please PM me.
 
 
 
