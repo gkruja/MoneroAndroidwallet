@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
 
     <TextView
@@ -9,5 +10,69 @@
         android:textSize="30sp"
         android:text="GENERATE WALLET"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+        />
+    <!-- TODO need to not hardcode string here -->
+    <TextView
+        android:id="@+id/WalletName_Title"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Wallet Name"
+        android:textColor="@color/menu_background_color"
+        android:textSize="16sp"
+        />
+
+    <EditText
+        android:id="@+id/WalletName_Value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textIsSelectable="true"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:inputType="text"
+        android:layout_marginBottom="50dp"
+        />
+    <TextView
+        android:id="@+id/WalletPassword_Title"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Wallet Password"
+        android:textColor="@color/menu_background_color"
+        android:textSize="16sp"/>
+
+    <EditText
+        android:id="@+id/WalletPassword_Value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:inputType="textPassword"
+        android:textSize="15sp"
+        android:focusable="true"
+        />
+
+
+    <Button
+        android:id="@+id/button_generate"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_generate"/>
+
 </LinearLayout>

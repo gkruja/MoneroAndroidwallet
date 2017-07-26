@@ -90,6 +90,8 @@ public:
 
     bool GeneratefromMnemonic(string path ,string mnemonic,string language,string WalletName,string password,bool testnet);
 
+    bool GenerateWallet(string path, string Password, string walletname);
+
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;

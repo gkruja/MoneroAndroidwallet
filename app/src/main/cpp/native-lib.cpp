@@ -9,6 +9,29 @@ const static epee::global_regexp_critical_section gregexplock;
 
 Monero::AndroidWallet  wallet2;
 
+
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_InitActivity_GenerateWallet_GenerateWalletFragment_GenerateWallet(
+        JNIEnv *env, jobject instance, jstring Path_, jstring WalletName_, jstring Password_) {
+    string Path = env->GetStringUTFChars(Path_, 0);
+    string WalletName = env->GetStringUTFChars(WalletName_, 0);
+    string Password = env->GetStringUTFChars(Password_, 0);
+
+
+    if (std::ifstream(Path+"/"+WalletName)) {
+
+        return false;
+    } else
+    {
+
+        return   wallet2.GenerateWallet(Path,WalletName,Password);
+
+    }
+
+}
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_MainActivity_ParseQR(JNIEnv *env, jobject instance,
@@ -356,3 +379,4 @@ Java_com_example_root_monerotest_MenuFragments_ReceiveFragment_GetIntegratedAddr
     return env->NewStringUTF(wallet2.getIntegratedAddress(paymentid).c_str());
 
 }
+

@@ -14,6 +14,10 @@ import com.example.root.monerotest.R;
 
 public class InitActivity extends AppCompatActivity implements View.OnClickListener {
 
+    static {
+        System.loadLibrary("c++_shared");
+        System.loadLibrary("native-lib");
+    }
     Thread mSplashThread;
 
     @Override

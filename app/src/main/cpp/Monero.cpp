@@ -72,6 +72,43 @@ bool AndroidWallet::init(string DaemonAddress, string Password, string WalletNam
 
     }
 
+
+bool AndroidWallet::GenerateWallet(string path, string Password, string walletname) {
+
+    boost::filesystem::path dir(path);
+    boost::filesystem::create_directories(dir);
+
+//        Monero::WalletManagerFactory *test = new Monero::WalletManagerFactory;
+//        Monero::WalletManager *walletManager = test->getWalletManager();
+//
+//        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
+//        delete  wallet;
+
+
+    remove("/sdcard/monerolog");
+    mlog_configure("/sdcard/monerolog", false);
+    mlog_set_log_level(4);
+
+    bool keys_file;
+    bool wallet_file;
+    tools::wallet2::wallet_exists(path+"/"+walletname,keys_file,wallet_file);
+
+    wallet2 = new tools::wallet2(true, false);
+    if(wallet_file || keys_file)
+    {
+        return false;
+    }
+    crypto::secret_key secretKey, recover_key ;
+    try {
+        recover_key  =    wallet2->generate(path+"/"+walletname, Password, secretKey, false, false);
+    }catch (const std::exception &e){
+        LOG_ERROR("wallet Error creating:" << e.what());
+        return false;
+    }
+
+    return true;
+
+}
     bool AndroidWallet::Check_Connection(){
 
         bool connection = wallet2->check_connection();

@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.root.monerotest.R;
 
 public class GenerateWalletActivity extends AppCompatActivity {
-
+    static {
+        System.loadLibrary("c++_shared");
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -15,4 +18,6 @@ public class GenerateWalletActivity extends AppCompatActivity {
 
         setContentView(R.layout.gen_wallet_activity);
     }
+
+
 }
