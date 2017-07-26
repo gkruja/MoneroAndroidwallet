@@ -15,19 +15,12 @@ import com.example.root.monerotest.MenuFragments.SettingsFragment;
 
 public class SettingActivity extends AppCompatActivity{
 
-
-
-
-
     public static final String PREF_FILE = "user_pref.dat";
     public static final String EXTRA_STATE = "EXTRA_STATE";
     public static final String EXTRA_ADDRESS = "EXTRA_ADDRESS";
     public static final String EXTRA_IP = "EXTRA_IP";
     public static final String EXTRA_NETWORK_PREF = "EXTRA_NET_PREF";
     public static final String EXTRA_SYNC_SLEEP = "EXTRA_SYNC_SLEEP";
-
-
-
 
 
     @Override

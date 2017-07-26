@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.monerotest.InitActivity.InitFragment;
 import com.example.root.monerotest.MenuFragments.ReceiveFragment;
 import com.example.root.monerotest.MenuFragments.SendFragment;
 import com.example.root.monerotest.MenuFragments.SettingsFragment;
@@ -70,25 +71,45 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
         SharedPreferences pref = getSharedPreferences(SettingActivity.PREF_FILE, MODE_PRIVATE);
-
         //Set alarm for auto-sync if setting set.
         if(pref.getBoolean(SettingActivity.EXTRA_SYNC_SLEEP, false))
         setAutoSyncAlarm();
 
 
+        if(getIntent() != null && getIntent().hasExtra(InitFragment.EXTRA_PATH)){
+
+            //Init wallet with the path from selected file.
+            InitWallet(getIntent().getStringExtra(InitFragment.EXTRA_PATH));
+
+            //Change Ip of wallet to the one enter in settings.
+            String ip = pref.getString(SettingActivity.EXTRA_IP, "");
+            if(!ip.isEmpty()){
+                ReInitWallet(ip);
+            }
+
+            init();
+            return;
+        }
+
+        //Loads wallet from hardcoded location.
         if(checkWalletFileAvailable()){
             //Initialize wallet with default IP:PORT (Monero-World)
             InitWallet(WALLET_PATH);
-
 
             String ip = pref.getString(SettingActivity.EXTRA_IP, "");
             if(!ip.isEmpty()){
                 ReInitWallet(ip);
             }
         }
+
+
+    }
+
+    private void init(){
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
 
         mIsSyncing = false;
@@ -375,16 +396,17 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
     public void setAutoSyncAlarm(){
 
-        AlarmManager alarmMgr;
-        PendingIntent alarmIntent;
-
-        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intentBroadcast = new Intent(this, AutoSyncBroadcast.class);
-        alarmIntent = PendingIntent.getBroadcast(this, 0, intentBroadcast, 0);
-
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() +
-                       60 * 60 * 1000, alarmIntent);
+        //TODO: missing.
+//        AlarmManager alarmMgr;
+//        PendingIntent alarmIntent;
+//
+//        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intentBroadcast = new Intent(this, AutoSyncBroadcast.class);
+//        alarmIntent = PendingIntent.getBroadcast(this, 0, intentBroadcast, 0);
+//
+//        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                SystemClock.elapsedRealtime() +
+//                       60 * 60 * 1000, alarmIntent);
     }
     /**
      * Callbacks so the service can report back to main activity.

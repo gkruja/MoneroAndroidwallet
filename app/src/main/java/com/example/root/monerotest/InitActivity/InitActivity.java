@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageButton;
-
-import com.example.root.monerotest.InitActivity.GenerateWallet.GenerateWalletActivity;
-import com.example.root.monerotest.InitActivity.RestoreWallet.RestoreWalletActivity;
 import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
 
-public class InitActivity extends AppCompatActivity implements View.OnClickListener {
+public class InitActivity extends AppCompatActivity {
 
     static {
         System.loadLibrary("c++_shared");
@@ -25,7 +21,7 @@ public class InitActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.init_activity);
-        setListeners();
+
 
          mSplashThread = new Thread(){
             @Override
@@ -44,40 +40,6 @@ public class InitActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         //mSplashThread.start();
-    }
-
-
-    private void setListeners(){
-
-        ImageButton openWallet = (ImageButton) findViewById(R.id.action_open_wallet);
-        ImageButton createWallet = (ImageButton) findViewById(R.id.action_create_wallet);
-        ImageButton recoverWallet = (ImageButton) findViewById(R.id.action_restore_wallet);
-
-
-
-        openWallet.setOnClickListener(this);
-        createWallet.setOnClickListener(this);
-        recoverWallet.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()){
-            case R.id.action_open_wallet:
-
-                break;
-
-            case R.id.action_create_wallet:
-                Intent createWallet = new Intent(this, GenerateWalletActivity.class);
-                startActivity(createWallet);
-                break;
-
-            case R.id.action_restore_wallet:
-                Intent restoreWallet = new Intent(this, RestoreWalletActivity.class);
-                startActivity(restoreWallet);
-                break;
-        }
     }
 
     @Override
