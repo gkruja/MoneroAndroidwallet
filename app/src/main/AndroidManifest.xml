@@ -21,9 +21,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity android:name=".InitActivity.GenerateWallet.GenerateWalletActivity"/>
+
         <activity android:name=".InitActivity.RestoreWallet.RestoreWalletActivity"/>
 
         <activity android:name=".MainActivity">
@@ -44,6 +46,17 @@
             android:exported="false"/>
 
         <receiver android:name=".AutoSyncBroadcast"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.root.monerotest.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
 
     </application>
 

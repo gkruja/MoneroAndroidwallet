@@ -19,7 +19,7 @@ bool AndroidWallet::init(string DaemonAddress, string Password, string WalletNam
     if (wallet2 == nullptr)
     {
         wallet2 = new tools::wallet2(true);
-        wallet2->load( WalletName, "password");
+        wallet2->load( WalletName, Password);
     }
 
     bool init = wallet2->init(std::move(DaemonAddress));
@@ -685,16 +685,23 @@ bool AndroidWallet::GeneratefromMnemonic(string path, string mnemonic, string la
     boost::filesystem::path dir(path+"/monero");
     boost::filesystem::create_directories(dir);
 
-    wallet2 = new tools::wallet2(true,false);
 
+    bool keys_file;
+    bool wallet_file;
+    tools::wallet2::wallet_exists(path+"/"+WalletName,keys_file,wallet_file);
 
+    wallet2 = new tools::wallet2(true, false);
+    if(wallet_file || keys_file)
+    {
+        return false;
+    }
 
     crypto::secret_key secretKey,recoverykey;
     if(crypto::ElectrumWords::words_to_bytes(mnemonic,secretKey,language))
     {
         try {
 
-            recoverykey   =    wallet2->generate(path, password, secretKey, false, false);
+            recoverykey   =  wallet2->generate(path+"/"+WalletName, password, secretKey,true, false);
 
         }catch (const std::exception &e){
 

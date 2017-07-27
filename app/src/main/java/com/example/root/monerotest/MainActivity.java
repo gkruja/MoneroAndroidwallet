@@ -79,8 +79,10 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         if(getIntent() != null && getIntent().hasExtra(InitFragment.EXTRA_PATH)){
 
+            String pass = getIntent().getStringExtra("password");
+
             //Init wallet with the path from selected file.
-            InitWallet(getIntent().getStringExtra(InitFragment.EXTRA_PATH));
+            InitWallet(getIntent().getStringExtra(InitFragment.EXTRA_PATH), pass);
 
             //Change Ip of wallet to the one enter in settings.
             String ip = pref.getString(SettingActivity.EXTRA_IP, "");
@@ -94,8 +96,10 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
 
         //Loads wallet from hardcoded location.
         if(checkWalletFileAvailable()){
+            String pass = getIntent().getStringExtra("password");
+
             //Initialize wallet with default IP:PORT (Monero-World)
-            InitWallet(WALLET_PATH);
+            InitWallet(WALLET_PATH, pass);
 
             String ip = pref.getString(SettingActivity.EXTRA_IP, "");
             if(!ip.isEmpty()){
@@ -104,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         }
 
 
+        init();
     }
 
     private void init(){
@@ -167,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 if(ff.exists() && !ff.isDirectory() && ff.getPath().endsWith(".keys")){
                     //there is a wallet. (the first one found)
                     WALLET_PATH = ff.getAbsolutePath();
+                    WALLET_PATH.isEmpty();
                     return true;
                 }
             }
@@ -532,7 +538,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     public native String ParseQR(String result);
     public native int WalletHeight();
     private native boolean ReInitWallet(String ipPort);
-    private native boolean InitWallet(String path);
+    private native boolean InitWallet(String path ,String Password);
     public native String SendTransfer(String Address, double Amount);
 
 }

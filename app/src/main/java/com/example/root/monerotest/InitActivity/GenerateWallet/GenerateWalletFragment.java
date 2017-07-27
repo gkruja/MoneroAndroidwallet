@@ -1,9 +1,11 @@
 package com.example.root.monerotest.InitActivity.GenerateWallet;
 
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,13 +58,12 @@ public class GenerateWalletFragment extends Fragment {
 
                     File moneroDir = new File(externalStorage, FOLDER_NAME);
 
+
+
                     GenerateWallet(moneroDir.getAbsolutePath(),WalletName.getText().toString(),WalletPassword.getText().toString());
 
-
+                    getActivity().finish();
                 }
-
-
-
 
             }
         });

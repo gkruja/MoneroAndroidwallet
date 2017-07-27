@@ -9,7 +9,29 @@ const static epee::global_regexp_critical_section gregexplock;
 
 Monero::AndroidWallet  wallet2;
 
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_root_monerotest_InitActivity_RestoreWallet_RestoreWalletFragment_GeneratefromMnemonic(
+        JNIEnv *env, jobject instance, jstring path_, jstring mnemonic_, jstring language_,
+        jstring walletname_, jstring password_, jboolean testnet) {
+    const char *path = env->GetStringUTFChars(path_, 0);
+    const char *mnemonic = env->GetStringUTFChars(mnemonic_, 0);
+    const char *language = env->GetStringUTFChars(language_, 0);
+    const char *walletname = env->GetStringUTFChars(walletname_, 0);
+    const char *password = env->GetStringUTFChars(password_, 0);
 
+    // TODO
+
+    bool ret = wallet2.GeneratefromMnemonic(path,mnemonic,language,walletname,password,testnet);
+
+    env->ReleaseStringUTFChars(path_, path);
+    env->ReleaseStringUTFChars(mnemonic_, mnemonic);
+    env->ReleaseStringUTFChars(language_, language);
+    env->ReleaseStringUTFChars(walletname_, walletname);
+    env->ReleaseStringUTFChars(password_, password);
+
+    return ret;
+}
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -130,19 +152,24 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_MainActivity_InitWallet(
         JNIEnv *env,
-        jobject /* this */,jstring Path)
+        jobject /* this */,jstring Path,jstring Password)
 {
-    bool init =false ;
+    bool init =false;
+
+
+
     string path = env->GetStringUTFChars(Path,0);
+    string password = env->GetStringUTFChars(Password,0);
+
     if (std::ifstream(path)) {
         //159.203.250.205:38081
         //192.168.1.141:28081
-        init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
+        init = wallet2.init("159.203.250.205:38081", password, path, true, 4);
     } else
     {
         wallet2.GenerateWallet(path,"password");
 
-        init = wallet2.init("159.203.250.205:38081", "password", path, true, 4);
+        init = wallet2.init("159.203.250.205:38081", password, path, true, 4);
     }
 
     return init;
@@ -367,6 +394,14 @@ Java_com_example_root_monerotest_MenuFragments_ReceiveFragment_GeneratePaymentId
         JNIEnv *env, jobject /* this */) {
 
     return env->NewStringUTF(wallet2.get_payment_id().c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_root_monerotest_MenuFragments_SettingsFragment_GetMnemonicseed(JNIEnv *env,
+                                                                                jobject instance) {
+
+    return env->NewStringUTF(wallet2.GetMnmonicseed().c_str());
 }
 
 extern "C"

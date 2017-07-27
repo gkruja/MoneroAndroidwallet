@@ -92,6 +92,19 @@ public:
 
     bool GenerateWallet(string path, string Password, string walletname);
 
+    string GetMnmonicseed(){
+        string seed;
+
+
+       cryptonote::account_keys test =  wallet2->get_account().get_keys();
+
+        crypto::ElectrumWords::bytes_to_words(test.m_spend_secret_key, seed,"English");
+
+
+        return seed;
+    };
+
+
 private:
     uint64_t local_height = 0;
     uint64_t bc_height = 0 ;

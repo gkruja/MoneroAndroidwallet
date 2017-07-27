@@ -2,8 +2,12 @@ package com.example.root.monerotest.MenuFragments;
 
 
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -11,9 +15,13 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
@@ -27,6 +35,15 @@ public class SettingsFragment extends PreferenceFragment implements EditTextPref
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
+
+    private native String GetMnemonicseed();
+
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("c++_shared");
+        System.loadLibrary("native-lib");
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +78,49 @@ public class SettingsFragment extends PreferenceFragment implements EditTextPref
             }
 
         }
+
+
+        LayoutInflater inflater = (LayoutInflater)   getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View customButton = inflater.inflate(R.layout.button, null);
+
+        getPreferenceScreen().addPreference(new Preference(getActivity()){
+            @Override
+            protected View onCreateView(ViewGroup parent) {
+                View v = super.onCreateView(parent);
+                    v = customButton;
+                    v.findViewById(R.id.pref_button).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Mnemonic details");
+
+                            builder.setNegativeButton("Copy Mnemonic", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("Mnemonic",GetMnemonicseed());
+                                    clipboardManager.setPrimaryClip(clip);
+                                }
+                            });
+
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                            builder.setMessage(GetMnemonicseed());
+                            AlertDialog alert1 = builder.create();
+                            alert1.show();
+                        }
+                    });
+                return v;
+            }
+        });
+
+
     }
+
 
     public boolean isNodeAddressValid(){
 

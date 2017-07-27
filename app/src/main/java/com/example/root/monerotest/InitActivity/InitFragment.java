@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,16 @@ import com.example.root.monerotest.InitActivity.RestoreWallet.RestoreWalletActiv
 import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class InitFragment extends Fragment implements View.OnClickListener {
 
 
     public static final int OPEN_FILE_CODE = 123;
     public static final String EXTRA_PATH = "Extra_path";
+    private String mWalletPath;
 
     @Nullable
     @Override
@@ -67,17 +73,25 @@ public class InitFragment extends Fragment implements View.OnClickListener {
             Uri uri = null;
             if(data != null){
                 uri = data.getData();
-                uri.getPath();
 
-                Toast.makeText(getActivity(), "PATH: " + uri.getPath(), Toast.LENGTH_LONG).show();
+
+                mWalletPath = uri.getPath();
+
+                File wallet = new File(mWalletPath);
+
+                String one = wallet.getAbsolutePath();
+
+                String hardcodedPath = "/storage/emulated/0/";
+
+                String[] lastPath = one.split(":");
+
+                String result = hardcodedPath + lastPath[1];
+
+                mWalletPath = result;
+
+                Toast.makeText(getActivity(), "PATH: " + result, Toast.LENGTH_LONG).show();
 
                 showAlertDialog();
-
-
-//                Intent mainActivity = new Intent(getActivity(), MainActivity.class);
-//                mainActivity.putExtra(EXTRA_PATH, uri.getPath());
-//                startActivity(mainActivity);
-
             }
         }
     }
@@ -110,6 +124,13 @@ public class InitFragment extends Fragment implements View.OnClickListener {
 
     private boolean verifyPassword(String _password){
         Toast.makeText(getActivity(), _password, Toast.LENGTH_SHORT).show();
+
+        Intent mainActivity = new Intent(getActivity(), MainActivity.class);
+        mainActivity.putExtra(EXTRA_PATH, mWalletPath);
+        mainActivity.putExtra("password", _password);
+        startActivity(mainActivity);
+        getActivity().finish();
+
         return false;
     }
 
