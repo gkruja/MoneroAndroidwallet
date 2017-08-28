@@ -48,7 +48,7 @@ Java_com_example_root_monerotest_InitActivity_GenerateWallet_GenerateWalletFragm
     } else
     {
 
-        return   wallet2.GenerateWallet(Path,WalletName,Password);
+        return   wallet2.GenerateWallet(Path,Password,WalletName);
 
     }
 
