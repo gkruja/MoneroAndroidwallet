@@ -1,6 +1,8 @@
 package com.example.root.monerotest.InitActivity.GenerateWallet;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,10 +15,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.root.monerotest.InitActivity.InitActivity;
+import com.example.root.monerotest.InitActivity.InitFragment;
+import com.example.root.monerotest.MainActivity;
 import com.example.root.monerotest.R;
 
 import java.io.File;
 
+import static com.example.root.monerotest.InitActivity.InitFragment.EXTRA_PATH;
 import static com.example.root.monerotest.MainActivity.FOLDER_NAME;
 
 public class GenerateWalletFragment extends Fragment {
@@ -60,9 +66,21 @@ public class GenerateWalletFragment extends Fragment {
 
 
 
-                    GenerateWallet(moneroDir.getAbsolutePath(),WalletName.getText().toString(),WalletPassword.getText().toString());
+                   boolean status =  GenerateWallet(moneroDir.getAbsolutePath(),WalletName.getText().toString(),WalletPassword.getText().toString());
 
-                    getActivity().finish();
+                    if(status) {
+                        Toast.makeText(getActivity() , "Wallet Created", Toast.LENGTH_LONG).show();
+
+                        Intent mainActivity = new Intent(getActivity(), MainActivity.class);
+                        mainActivity.putExtra(InitFragment.EXTRA_PATH, "/sdcard/monero/"+WalletName.getText().toString());
+                        mainActivity.putExtra("password", WalletPassword.getText().toString());
+                        startActivity(mainActivity);
+                        getActivity().finish();
+
+
+                    }else {
+                        Toast.makeText(getActivity() , "Wallet Name taken or error creating", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             }

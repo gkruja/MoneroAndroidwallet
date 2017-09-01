@@ -48,7 +48,7 @@ Java_com_example_root_monerotest_InitActivity_GenerateWallet_GenerateWalletFragm
     } else
     {
 
-        return   wallet2.GenerateWallet(Path,WalletName,Password);
+        return   wallet2.GenerateWallet(Path,Password,WalletName);
 
     }
 
@@ -152,7 +152,7 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_root_monerotest_MainActivity_InitWallet(
         JNIEnv *env,
-        jobject /* this */,jstring Path,jstring Password)
+        jobject /* this */,jstring Path,jstring Password,jboolean testnet)
 {
     bool init =false;
 
@@ -164,7 +164,7 @@ Java_com_example_root_monerotest_MainActivity_InitWallet(
     if (std::ifstream(path)) {
         //159.203.250.205:38081
         //192.168.1.141:28081
-        init = wallet2.init("159.203.250.205:38081", password, path, true, 4);
+        init = wallet2.init("159.203.250.205:38081", password, path, testnet, 4);
     } else
     {
         wallet2.GenerateWallet(path,"password");
@@ -354,11 +354,12 @@ Java_com_example_root_monerotest_MenuFragments_SendFragment_CheckAddress(
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_root_monerotest_MainActivity_SendTransfer(
-        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount) {
+        JNIEnv *env, jobject /* this */,jstring Address,jdouble Amount,jstring PaymentID) {
 
     string address = env->GetStringUTFChars(Address,0);
+    string paymentid = env->GetStringUTFChars(PaymentID,0);
 
-    wallet2.transfer(address,Amount *1000000000000,"0000000000000000",1);
+    wallet2.transfer(address,Amount *1000000000000,paymentid,0);
 
     return env->NewStringUTF(wallet2.pending_tx.c_str());
 }

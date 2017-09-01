@@ -18,8 +18,16 @@ bool AndroidWallet::init(string DaemonAddress, string Password, string WalletNam
    // daemon.append(DaemonAddress);
     if (wallet2 == nullptr)
     {
-        wallet2 = new tools::wallet2(true);
-        wallet2->load( WalletName, Password);
+        COFFEE_TRY(){
+                wallet2 = new tools::wallet2(testnet);
+                wallet2->load( WalletName, Password);
+            }COFFEE_CATCH(){
+               string test;
+                coffeecatch_cancel_pending_alarm();
+               test += coffeecatch_get_message();
+                return false;
+            }COFFEE_END();
+
     }
 
     bool init = wallet2->init(std::move(DaemonAddress));
@@ -55,7 +63,7 @@ bool AndroidWallet::init(string DaemonAddress, string Password, string WalletNam
         bool wallet_file;
         tools::wallet2::wallet_exists(path,keys_file,wallet_file);
 
-        wallet2 = new tools::wallet2(true, false);
+        wallet2 = new tools::wallet2(false, false);
         if(wallet_file || keys_file)
         {
             return false;
@@ -73,7 +81,7 @@ bool AndroidWallet::init(string DaemonAddress, string Password, string WalletNam
     }
 
 
-bool AndroidWallet::GenerateWallet(string path, string Password, string walletname) {
+bool AndroidWallet::GenerateWallet(string path, string Password, string walletname ) {
 
     boost::filesystem::path dir(path);
     boost::filesystem::create_directories(dir);
@@ -84,25 +92,27 @@ bool AndroidWallet::GenerateWallet(string path, string Password, string walletna
 //        Monero::Wallet *wallet = walletManager->createWallet(path+"/monero/"+Name, Password, "English", true);
 //        delete  wallet;
 
-
+string temp = dir.string();
     remove("/sdcard/monerolog");
     mlog_configure("/sdcard/monerolog", false);
     mlog_set_log_level(4);
 
     bool keys_file;
     bool wallet_file;
-    tools::wallet2::wallet_exists(path+"/"+walletname,keys_file,wallet_file);
+    tools::wallet2::wallet_exists("/sdcard/monero/"+walletname,keys_file,wallet_file);
 
-    wallet2 = new tools::wallet2(true, false);
+    wallet2 = new tools::wallet2(false, false);
     if(wallet_file || keys_file)
     {
         return false;
     }
     crypto::secret_key secretKey, recover_key ;
-    try {
-        recover_key  =    wallet2->generate(path+"/"+walletname, Password, secretKey, false, false);
-    }catch (const std::exception &e){
-        LOG_ERROR("wallet Error creating:" << e.what());
+    COFFEE_TRY() {
+        recover_key  =    wallet2->generate("/sdcard//monero/"+walletname, Password, secretKey, false, false);
+    }COFFEE_CATCH (){
+        coffeecatch_cancel_pending_alarm();
+        coffeecatch_cleanup();
+        LOG_ERROR(coffeecatch_get_message());
         return false;
     }
 
@@ -230,7 +240,7 @@ void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId,
 
     int transfer_type = TransferNew;
 
-    size_t fake_outs_count = 9;
+    size_t fake_outs_count = 4;
 
     if (fake_outs_count == 0) {
         fake_outs_count = 4;
@@ -321,7 +331,8 @@ void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId,
 
     // prompt is there is no payment id and confirmation is required
 
-    try {
+    //try {
+    COFFEE_TRY(){
         // figure out what tx will be necessary
         std::vector<tools::wallet2::pending_tx> ptx_vector;
         uint64_t bc_height, unlock_block = 0;
@@ -420,102 +431,107 @@ void AndroidWallet::transfer(string address, uint64_t ammount, string paymentId,
 
                 // if no exception, remove element from vector
                 ptx_vector.pop_back();
+                pending_tx = epee::string_tools::pod_to_hex(cryptonote::get_transaction_hash(ptx.tx));
 
-                pending_tx = cryptonote::short_hash_str(cryptonote::get_transaction_hash(ptx.tx));
 
                 wallet2->store_tx_info();
 
             }
-    }
-    catch (const tools::error::daemon_busy &) {
-        //    fail_msg_writer() << tr("daemon is busy. Please try again later.");
-        string ret = "daemon is busy. Please try again later.";
-    }
-    catch (const tools::error::no_connection_to_daemon &) {
-        //   fail_msg_writer() << tr("no connection to daemon. Please make sure daemon is running.");
-        string ret = "unknown error";
-
-    }
-    catch (const tools::error::wallet_rpc_error &e) {
-        //LOG_ERROR("RPC error: " << e.to_string());
-        //      fail_msg_writer() << tr("RPC error: ") << e.what();
-        string ret = "unknown error";
-    }
-    catch (const tools::error::get_random_outs_error &e) {
-        //  fail_msg_writer() << tr("failed to get random outputs to mix: ") << e.what();
-        string ret = "unknown error";
-    }
-    catch (const tools::error::not_enough_money &e) {
+    }COFFEE_CATCH(){
+        coffeecatch_cancel_pending_alarm();
+        coffeecatch_cleanup();
+       pending_tx =  "An Error Occured when creating the Transaction";
+        return;
+    }COFFEE_END();
+//    catch (const tools::error::daemon_busy &) {
+//        //    fail_msg_writer() << tr("daemon is busy. Please try again later.");
+//        string ret = "daemon is busy. Please try again later.";
+//    }
+//    catch (const tools::error::no_connection_to_daemon &) {
+//        //   fail_msg_writer() << tr("no connection to daemon. Please make sure daemon is running.");
+//        string ret = "unknown error";
+//
+//    }
+//    catch (const tools::error::wallet_rpc_error &e) {
+//        //LOG_ERROR("RPC error: " << e.to_string());
+//        //      fail_msg_writer() << tr("RPC error: ") << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::get_random_outs_error &e) {
+//        //  fail_msg_writer() << tr("failed to get random outputs to mix: ") << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::not_enough_money &e) {
 //        LOG_PRINT_L0(boost::format("not enough money to transfer, available only %s, sent amount %s") %
-//                     print_money(e.available()) %
+//                    print_money(e.available()) %
 //                     print_money(e.tx_amount()));
 //        fail_msg_writer() << tr("Not enough money in unlocked balance");
-        string ret = "unknown error";
-    }
-    catch (const tools::error::tx_not_possible &e) {
-
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::tx_not_possible &e) {
+//
 //        LOG_PRINT_L0(boost::format("not enough money to transfer, available only %s, transaction amount %s = %s + %s (fee)") %
 //                     print_money(e.available()) %
 //                     print_money(e.tx_amount() + e.fee())  %
 //                     print_money(e.tx_amount()) %
 //                     print_money(e.fee()));
 //        fail_msg_writer() << tr("Failed to find a way to create transactions. This is usually due to dust which is so small it cannot pay for itself in fees, or trying to send more money than the unlocked balance, or not leaving enough for fees");
-        string ret = "unknown error";
-    }
-    catch (const tools::error::not_enough_outs_to_mix &e) {
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::not_enough_outs_to_mix &e) {
 //        auto writer = fail_msg_writer();
 //        writer << tr("not enough outputs for specified mixin_count") << " = " << e.mixin_count() << ":";
 //        for (std::pair<uint64_t, uint64_t> outs_for_amount : e.scanty_outs())
 //        {
 //            writer << "\n" << tr("output amount") << " = " << print_money(outs_for_amount.first) << ", " << tr("found outputs to mix") << " = " << outs_for_amount.second;
 //        }
-        string ret = "unknown error";
-    }
-    catch (const tools::error::tx_not_constructed &) {
-        //   fail_msg_writer() << tr("transaction was not constructed");
-        string ret = "unknown error";
-
-    }
-    catch (const tools::error::tx_rejected &e) {
-        //    fail_msg_writer() << (boost::format(tr("transaction %s was rejected by daemon with status: ")) % get_transaction_hash(e.tx())) << e.status();
-        std::string reason = e.reason();
-        // if (!reason.empty())
-        //    fail_msg_writer() << tr("Reason: ") << reason;
-        string ret = "unknown error";
-    }
-    catch (const tools::error::tx_sum_overflow &e) {
-        //  fail_msg_writer() << e.what();
-        string ret = "unknown error";
-    }
-    catch (const tools::error::zero_destination &) {
-        //  fail_msg_writer() << tr("one of destinations is zero");
-        string ret = "unknown error";
-    }
-    catch (const tools::error::tx_too_big &e) {
-        //  fail_msg_writer() << tr("failed to find a suitable way to split transactions");
-        string ret = "unknown error";
-    }
-    catch (const tools::error::transfer_error &e) {
-       // LOG_ERROR("unknown transfer error: " << e.to_string());
-        //   fail_msg_writer() << tr("unknown transfer error: ") << e.what();
-        string ret = "unknown error";
-    }
-    catch (const tools::error::wallet_internal_error &e) {
-      //  LOG_ERROR("internal error: " << e.to_string());
-        //  fail_msg_writer() << tr("internal error: ") << e.what();
-        string ret = "unknown error";
-    }
-    catch (const std::exception &e) {
-       // LOG_ERROR("unexpected error: " << e.what());
-        //  fail_msg_writer() << tr("unexpected error: ") << e.what();
-        string ret = "unknown error";
-    }
-    catch (...) {
-      //  LOG_ERROR("unknown error");
-        //fail_msg_writer() << tr("unknown error");
-        string ret = "unknown error";
-
-    }
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::tx_not_constructed &) {
+//        //   fail_msg_writer() << tr("transaction was not constructed");
+//        string ret = "unknown error";
+//
+//    }
+//    catch (const tools::error::tx_rejected &e) {
+//        //    fail_msg_writer() << (boost::format(tr("transaction %s was rejected by daemon with status: ")) % get_transaction_hash(e.tx())) << e.status();
+//        std::string reason = e.reason();
+//        // if (!reason.empty())
+//        //    fail_msg_writer() << tr("Reason: ") << reason;
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::tx_sum_overflow &e) {
+//        //  fail_msg_writer() << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::zero_destination &) {
+//        //  fail_msg_writer() << tr("one of destinations is zero");
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::tx_too_big &e) {
+//        //  fail_msg_writer() << tr("failed to find a suitable way to split transactions");
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::transfer_error &e) {
+//       // LOG_ERROR("unknown transfer error: " << e.to_string());
+//        //   fail_msg_writer() << tr("unknown transfer error: ") << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (const tools::error::wallet_internal_error &e) {
+//      //  LOG_ERROR("internal error: " << e.to_string());
+//        //  fail_msg_writer() << tr("internal error: ") << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (const std::exception &e) {
+//       // LOG_ERROR("unexpected error: " << e.what());
+//        //  fail_msg_writer() << tr("unexpected error: ") << e.what();
+//        string ret = "unknown error";
+//    }
+//    catch (...) {
+//      //  LOG_ERROR("unknown error");
+//        //fail_msg_writer() << tr("unknown error");
+//        string ret = "unknown error";
+//
+//    }
 
 }
 
@@ -593,9 +609,14 @@ void AndroidWallet::refresh() {
     bool connection = wallet2->check_connection(&version);
 
     if(connection){
-        wallet2->refresh();
-
-        wallet2->store();
+        COFFEE_TRY(){
+            wallet2->refresh();
+            wallet2->store();
+        }COFFEE_CATCH(){
+            coffeecatch_cleanup();
+            coffeecatch_cancel_pending_alarm();
+            return;
+        }
     }
 }
 
@@ -654,7 +675,7 @@ bool AndroidWallet::Generatefromseed(string path, string seed, string WalletName
     boost::filesystem::path dir(path+"/monero");
     boost::filesystem::create_directories(dir);
 
-    wallet2 = new tools::wallet2(true, false);
+    wallet2 = new tools::wallet2(false, false);
 
 
     crypto::secret_key secretKey, recoverykey ;
@@ -662,7 +683,7 @@ bool AndroidWallet::Generatefromseed(string path, string seed, string WalletName
     {
         try {
 
-            recoverykey   =    wallet2->generate(path, password, secretKey, false, false);
+            recoverykey   =    wallet2->generate(path, password, secretKey,true, false);
 
         }catch (const std::exception &e){
 
@@ -690,7 +711,7 @@ bool AndroidWallet::GeneratefromMnemonic(string path, string mnemonic, string la
     bool wallet_file;
     tools::wallet2::wallet_exists(path+"/"+WalletName,keys_file,wallet_file);
 
-    wallet2 = new tools::wallet2(true, false);
+    wallet2 = new tools::wallet2(false, false);
     if(wallet_file || keys_file)
     {
         return false;

@@ -3,6 +3,7 @@ package com.example.root.monerotest.InitActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,8 +13,10 @@ import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.root.monerotest.InitActivity.GenerateWallet.GenerateWalletActivity;
@@ -102,9 +105,25 @@ public class InitFragment extends Fragment implements View.OnClickListener {
         builder.setTitle("Enter the wallet password");
 
         // Set up the input
-        final EditText input = new EditText(getActivity());
+        Context context = getActivity();
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
-        builder.setView(input);
+        final EditText input = new EditText(getActivity());
+        input.setHint("Password");
+        layout.addView(input);
+
+        final CheckBox descriptionBox = new CheckBox(context);
+        descriptionBox.setHint("Testnet");
+        layout.addView(descriptionBox);
+
+        builder.setView(layout);
+
+
+
+
+
+
 
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
@@ -112,8 +131,9 @@ public class InitFragment extends Fragment implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 String result = input.getText().toString();
 
+
                 //validate that is the correct password.
-                verifyPassword(result);
+                verifyPassword(result,descriptionBox.isChecked());
 
                 dialog.dismiss();
             }
@@ -122,12 +142,13 @@ public class InitFragment extends Fragment implements View.OnClickListener {
         builder.show();
     }
 
-    private boolean verifyPassword(String _password){
-        Toast.makeText(getActivity(), _password, Toast.LENGTH_SHORT).show();
+    private boolean verifyPassword(String _password,boolean _testnet){
+       // Toast.makeText(getActivity(), _password, Toast.LENGTH_SHORT).show();
 
         Intent mainActivity = new Intent(getActivity(), MainActivity.class);
         mainActivity.putExtra(EXTRA_PATH, mWalletPath);
         mainActivity.putExtra("password", _password);
+        mainActivity.putExtra("testnet",_testnet);
         startActivity(mainActivity);
         getActivity().finish();
 

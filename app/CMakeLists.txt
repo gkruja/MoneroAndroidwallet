@@ -26,7 +26,9 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/Monero.cpp
               src/main/cpp/Monero.h
-              src/main/cpp/native-lib.cpp)
+              src/main/cpp/native-lib.cpp
+	      src/main/cpp/coffeecatch/coffeecatch.c
+              src/main/cpp/coffeecatch/coffeejni.c)
 
 
 

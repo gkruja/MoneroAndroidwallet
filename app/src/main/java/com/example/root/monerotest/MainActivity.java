@@ -1,9 +1,13 @@
 package com.example.root.monerotest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -16,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +34,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.monerotest.InitActivity.InitActivity;
 import com.example.root.monerotest.InitActivity.InitFragment;
 import com.example.root.monerotest.MenuFragments.ReceiveFragment;
 import com.example.root.monerotest.MenuFragments.SendFragment;
@@ -80,10 +86,20 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         if(getIntent() != null && getIntent().hasExtra(InitFragment.EXTRA_PATH)){
 
             String pass = getIntent().getStringExtra("password");
+            boolean test = getIntent().getBooleanExtra("testnet",false);
 
             //Init wallet with the path from selected file.
-            InitWallet(getIntent().getStringExtra(InitFragment.EXTRA_PATH), pass);
+           boolean init =  InitWallet(getIntent().getStringExtra(InitFragment.EXTRA_PATH), pass,test);
 
+
+            if(!init){
+                Intent backToIni = new Intent(this, InitActivity.class);
+
+                startActivity(backToIni);
+                Toast.makeText(MainActivity.this,"Wrong Password",Toast.LENGTH_LONG).show();
+
+                finish();
+            }
             //Change Ip of wallet to the one enter in settings.
             String ip = pref.getString(SettingActivity.EXTRA_IP, "");
             if(!ip.isEmpty()){
@@ -94,22 +110,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
             return;
         }
 
-        //Loads wallet from hardcoded location.
-        if(checkWalletFileAvailable()){
-            String pass = getIntent().getStringExtra("password");
 
-            //Initialize wallet with default IP:PORT (Monero-World)
-            InitWallet(WALLET_PATH, pass);
-
-            String ip = pref.getString(SettingActivity.EXTRA_IP, "");
-            if(!ip.isEmpty()){
-                ReInitWallet(ip);
-            }
-        }
-
-
-        init();
-    }
+   }
 
     private void init(){
 
@@ -352,18 +354,44 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                             String address = sendFragment.getAddress();
                             String paymentID = sendFragment.getPaymentID();
 
+                            if(paymentID.isEmpty()){
+                                paymentID = "0000000000000000";
+                            }
                             String ip = GetDaemonAddress();
                             //display the IP:PORT that the tx used.
-                            Toast.makeText(MainActivity.this, "Transaction successfully sent.  Address used:\n " +
-                                    ip, Toast.LENGTH_LONG).show();
+                           // Toast.makeText(MainActivity.this, "Transaction successfully sent.  Address used:\n " +
+                            //        ip, Toast.LENGTH_LONG).show();
 
-                            String test = SendTransfer(address, Double.parseDouble(amount));
+                            final String test = SendTransfer(address, Double.parseDouble(amount),paymentID);
 
-                            //Loads dashboard.
-                            DashboardFragment dashboardFragment = DashboardFragment.newInstance();
-                            setTitle(getString(R.string.nav_item_dashboard_title));
-                            mCurrentFragmentID = R.id.item_dashboard;
-                            getFragmentManager().beginTransaction().replace(R.id.main_content, dashboardFragment).commit();
+                            Toast.makeText(MainActivity.this, "\n" +test,Toast.LENGTH_LONG).show();
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Transaction ID/details");
+
+                            builder.setNegativeButton("Copy", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ClipboardManager clipboardManager = (ClipboardManager) MainActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("Send Message",test);
+                                    clipboardManager.setPrimaryClip(clip);
+                                }
+                            });
+
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DashboardFragment dashboardFragment = DashboardFragment.newInstance();
+                                    setTitle(getString(R.string.nav_item_dashboard_title));
+                                    mCurrentFragmentID = R.id.item_dashboard;
+                                    getFragmentManager().beginTransaction().replace(R.id.main_content, dashboardFragment).commit();
+                                }
+                            });
+                            builder.setMessage(test);
+                            AlertDialog alert1 = builder.create();
+                            alert1.show();
+                                    //Loads dashboard.
+
                         }else{
                             Toast.makeText(MainActivity.this , "fields not valid", Toast.LENGTH_LONG).show();
                         }
@@ -538,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     public native String ParseQR(String result);
     public native int WalletHeight();
     private native boolean ReInitWallet(String ipPort);
-    private native boolean InitWallet(String path ,String Password);
-    public native String SendTransfer(String Address, double Amount);
+    private native boolean InitWallet(String path ,String Password,boolean testnet);
+    public native String SendTransfer(String Address, double Amount,String PaymentID);
 
 }

@@ -34,6 +34,7 @@
 #include "boost/optional/optional.hpp"
 #include "reg_exp_definer.h"
 #include "boost/format.hpp"
+#include "coffeecatch/coffeecatch.h"
 
 
 namespace Monero{
